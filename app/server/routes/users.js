@@ -1,32 +1,37 @@
 const express = require('express')
 const router = express.Router()
+const userController = require('../controllers/userController')
+const User = require('../models/User')
 
-const users = [
-  { id: 1, name: "Alice" },
-  { id: 2, name: "Bob" }
-];
+router.get('/', userController.getAllUsers)
+router.get('/:id', userController.getUserById)
+router.post('/', userController.createUser)
+router.put('/:id', userController.updateUser)
+router.delete('/:id', userController.deleteUser)
 
-router.get('/', (req, res) => {
-    res.json(users)
-})
+/*
+const bcrypt = require('bcrypt')
 
-router.get('/:id', (req, res) => {
-    const user = users.find(u => u.id == req.params.id)
-    if(!user){
+router.post('/login', async (req, res) => {
+    const user = await User.findOne({ email: req.body.email })
+
+    if (!user) {
         return res.status(404).send("User not found")
     }
-    return res.json(user)
-})
 
-router.post('/', (req, res) => {
-    const newUser = { id: (users.length + 1), name: req.body.name}
-    users.push(newUser)
-    res.status(201).json(newUser)
-})
+    const isMatch = await bcrypt.compare(req.body.mdp, user.mdp)
 
-router.delete('/:id', (req, res) => {
-    users = users.filter(u => u != req.params.id)
-    return res.send("User deleted")
+    if (!isMatch) {
+        return res.status(401).send("Wrong password")
+    }
+
+    req.session.user = {
+        id: user.id,
+        role: user.role
+    }
+
+    res.send("Logged in")
 })
+*/
 
 module.exports = router
