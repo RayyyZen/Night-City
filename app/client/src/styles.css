@@ -1,4 +1,193 @@
 .App {
-  font-family: sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700;800&display=swap');
+
+:root {
+  --bg-main: #1A1D23;
+  --bg-container: #252A34;
+  --bg-header: #111418;
+
+  --text-main: #E6EDF3;
+  --text-soft: #F0F0F0;
+
+  --yellow: #FFD700;
+  --amber: #F0A500;
+  --gold-dark: #C2821C;
+
+  --blue-btn: #1F6FEB;
+
+  --border-soft: #4b5563;
+  --shadow-gold: 0 0 12px rgba(255, 215, 0, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: "Inter", sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.App {
+  min-height: 100vh;
   text-align: center;
+  padding: 40px 20px;
+  background:
+    radial-gradient(circle at top, rgba(255, 215, 0, 0.08), transparent 30%),
+    linear-gradient(180deg, #14171d 0%, var(--bg-main) 100%);
+}
+
+.app-header {
+  background: var(--bg-header);
+  border-bottom: 2px solid var(--yellow);
+  padding: 24px 16px;
+  margin-bottom: 30px;
+  box-shadow: var(--shadow-gold);
+}
+
+.app-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, var(--yellow), var(--amber));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.12);
+}
+
+.app-subtitle {
+  margin-top: 12px;
+  color: var(--text-soft);
+  font-size: 1.05rem;
+}
+
+.main-card {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--bg-container);
+  border: 1px solid rgba(255, 215, 0, 0.18);
+  border-radius: 18px;
+  padding: 28px 22px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.section-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.4rem;
+  margin-bottom: 18px;
+  color: var(--yellow);
+}
+
+.counter {
+  margin-bottom: 22px;
+  font-size: 1.05rem;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.btn-primary {
+  background: var(--blue-btn);
+  color: white;
+}
+
+.btn-special {
+  background: var(--yellow);
+  color: black;
+}
+
+button:hover {
+  background: linear-gradient(90deg, var(--yellow), var(--gold-dark));
+  color: black;
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.35);
+  transform: translateY(-1px);
+}
+
+.users-list {
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+}
+
+.users-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 4px solid var(--yellow);
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+form {
+  margin-top: 24px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+input {
+  min-width: 260px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: var(--bg-container);
+  color: var(--text-main);
+  outline: none;
+  font-size: 0.95rem;
+}
+
+input:focus {
+  border-color: var(--yellow);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.12);
+}
+
+input::placeholder {
+  color: #9aa4b2;
+}
+
+@media (max-width: 600px) {
+  .main-card {
+    padding: 20px 14px;
+  }
+
+  .users-list li {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  form {
+    flex-direction: column;
+  }
+
+  input,
+  form button {
+    width: 100%;
+  }
+}
 }

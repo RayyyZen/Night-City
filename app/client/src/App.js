@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import "./styles.css";
 
 function App(){
   // State 
@@ -6,7 +7,9 @@ function App(){
 
   const [users, setUsers]  = useState([
     {id: 1, nom: "Rémi"},
-    {id: 2, nom: "Rayane"}
+    {id: 2, nom: "Rayane"},
+    {id: 3, nom: "Alexis"},
+    {id: 4, nom: "Atahan"}
   ])
 
   const [newUser, setnewUser] = useState("");
@@ -50,24 +53,48 @@ function App(){
   };
 
   // display (render)
-  return( <div>
-    <h1>Night-Tour {count} </h1>
-    <button onClick={handleClick}>Add</button>
-    <h1>Users list</h1>
-    <ul>
-      {users.map((user) => (
-        <li key={user.id}>
-          {user.nom} <button onClick={() => handleDelete(user.id)} >Stock</button>
-          </li>
-      ))}
-    </ul>
-    <form action="submit" onSubmit={handleSubmit}>
-      <input value={newUser} ref={inputRef} type="text" placeholder="Ajouter un utilisateur..." 
-      onChange = {handleChange}
-      />
-      <button >Ajouter +</button>
-    </form>
-  </div>
+  return( 
+  <div className="App">
+      <header className="app-header">
+        <h1 className="app-title">Night-Tower</h1>
+        <p className="app-subtitle">Welcome to Night-Tower</p>
+      </header>
+
+      <main className="main-card">
+        <p className="counter">Counter : {count}</p>
+        <button className="btn-primary" onClick={handleClick}>
+          Add
+        </button>
+
+        <h2 className="section-title">Users list</h2>
+
+        <ul className="users-list">
+          {users.map((user) => (
+            <li key={user.id}>
+              <span className="user-name">{user.nom}</span>
+              <button
+                className="btn-special"
+                onClick={() => handleDelete(user.id)}
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            value={newUser}
+            onChange={handleChange}
+            type="text"
+            placeholder="Ajouter un utilisateur..."
+          />
+          <button className="btn-primary" type="submit">
+            Add +
+          </button>
+        </form>
+      </main>
+    </div>
   );
 }
 
