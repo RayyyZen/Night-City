@@ -1,4 +1,4 @@
-.App {
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
@@ -165,4 +165,4 @@ input:focus {
   .object-item { flex-direction: column; gap: 10px; text-align: center; }
   input, button { width: 100%; }
 }
-}
+
