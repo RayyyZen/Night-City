@@ -32,3 +32,7 @@ exports.updateUser = async (id, data) => {
 exports.deleteUserById = async (id) => {
     return await User.findOneAndDelete({ id: id })
 }
+
+exports.login = async (email) => {
+    return await User.findOne({ email: email })
+}
