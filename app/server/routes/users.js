@@ -3,36 +3,28 @@ const router = express.Router()
 const userController = require('../controllers/userController')
 const User = require('../models/User')
 
-router.get('/', userController.getAllUsers)
-router.get('/:id', userController.getUserById)
-router.post('/', userController.createUser)
-router.put('/:id', userController.updateUser)
-router.delete('/:id', userController.deleteUser)
-router.post('/login', userController.login)
+const userMiddlewares = require('../middlewares/userMiddlewares')
+const validate = require('../middlewares/validation')
 
-/*
-const bcrypt = require('bcrypt')
+const userValidators = require('../validators/userValidators')
 
-router.post('/login', async (req, res) => {
-    const user = await User.findOne({ email: req.body.email })
+const rateLimit = require('express-rate-limit')
 
-    if (!user) {
-        return res.status(404).send("User not found")
-    }
-
-    const isMatch = await bcrypt.compare(req.body.mdp, user.mdp)
-
-    if (!isMatch) {
-        return res.status(401).send("Wrong password")
-    }
-
-    req.session.user = {
-        id: user.id,
-        role: user.role
-    }
-
-    res.send("Logged in")
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 50
 })
-*/
+
+router.post('/register', limiter, userValidators.registerValidation, validate, userMiddlewares.isLogged, userController.register)
+router.post('/login', limiter, userValidators.loginValidation, validate, userMiddlewares.isLogged, userController.login)
+router.post('/verify-code', limiter, userValidators.codeValidation, validate, userMiddlewares.pendingUser, userController.verifyCode)
+router.get('/session', userMiddlewares.auth, userController.session)
+router.get('/profile', userMiddlewares.auth, userController.myProfile)
+router.get('/profile/:id', userMiddlewares.auth, userController.publicProfile)
+router.get('/', userMiddlewares.auth, userMiddlewares.isAdmin, userController.getAllUsers)
+router.get('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, userController.getUserById)
+router.post('/', limiter, userController.createUser)
+router.put('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, userController.updateUser)
+router.delete('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, userController.deleteUser)
 
 module.exports = router

@@ -1,14 +1,15 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Login from './pages/Login'
-//import Profile from './pages/Profile'
+import Profile from './pages/Profile'
+import VerifyCode from './pages/VerifyCode'
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/verify-code" element={<VerifyCode />} />
+    </Routes>
   )
 }
 

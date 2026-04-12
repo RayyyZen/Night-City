@@ -1,38 +1,170 @@
 const User = require('../models/User')
 const Counter = require('../models/Counter')
 
+const bcrypt = require('bcrypt')
+
 exports.getAllUsers = async () => {
-    return await User.find()
-    // User.find().select('-mdp')
+    try{
+        return await User.find()
+    } catch(err) {
+        console.error(err)
+        return null
+    }
 }
 
 exports.getUserById = async (id) => {
-    return await User.findOne({ id: id })
+    try{
+        return await User.findOne({ id: id })
+    } catch(err) {
+        console.error(err)
+        return null
+    }
+}
+
+exports.getUserProfileById = async (id) => {
+    try{
+        return await User.findOne({ id: id }).select('id building_id firstName lastName nickName email role level points')
+    } catch(err) {
+        console.error(err)
+        return null
+    }
+}
+
+exports.getUserPublicProfileById = async (id) => {
+    try{
+        return await User.findOne({ id: id }).select('building_id nickName email role level')
+    } catch(err) {
+        console.error(err)
+        return null
+    }
 }
 
 exports.createUser = async (data) => {
-    const counter = await Counter.findOneAndUpdate(
-    { name: "userId" },
-    { $inc: { value: 1 } },
-    { returnDocument: "after", upsert: true }
-    )
+    try{
+        
+        const counter = await Counter.findOneAndUpdate(
+        { name: "userLastId" },
+        { $inc: { value: 1 } },
+        { returnDocument: "after", upsert: true }
+        )
 
-    return await User.create({
-        id: counter.value,
-        ...data
-        // To access to what the data variable contains
-    })
+        if(!data || !data.password || !data.image || !data.gender || !data.firstName || !data.lastName || !data.nickName || !data.birthdate || !data.email){
+            throw new Error("The data fields are not complete to create the user")
+        }
+
+        const hashedPassword = await bcrypt.hash(data.password, 10)
+
+        return await User.create({
+            id: counter.value,
+            image: data.image,
+            gender: data.gender,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            nickName: data.nickName,
+            birthdate: data.birthdate,
+            email: data.email,
+            password: hashedPassword
+        })
+
+    } catch(err) {
+        console.error(err)
+        return null
+    }
 }
 
 exports.updateUser = async (id, data) => {
-    return await User.findOneAndUpdate({ id: id }, data, { returnDocument: "after" })
-    // To return the user after the update
+
+    if(!data || !data.password || !data.image || !data.firstName || !data.lastName || !data.nickName){
+        throw new Error("The data fields are not complete to create the user")
+    }
+
+    const hashedPassword = await bcrypt.hash(data.password, 10)
+
+    try{
+
+        return await User.findOneAndUpdate(
+            { id: id },
+            {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                nickName: data.nickName,
+                password: hashedPassword
+            },
+            { returnDocument: "after" })
+        // To return the user after the update
+
+    } catch(err) {
+        console.error(err)
+        return null
+    }
 }
 
 exports.deleteUserById = async (id) => {
-    return await User.findOneAndDelete({ id: id })
+    try{
+        return await User.findOneAndDelete({ id: id })
+    } catch(err) {
+        console.error(err)
+        return null
+    }
 }
 
-exports.login = async (email) => {
-    return await User.findOne({ email: email })
+exports.getUserByEmail = async (email) => {
+    try{
+        return await User.findOne({ email: email })
+    } catch(err) {
+        console.error(err)
+        return null
+    }
+}
+
+exports.loginSuccess = async (user, session) => {
+    if(!user || !session){
+        throw new Error("Can't finalize the user's entry")
+    }
+
+    session.user = {
+        id: user.id,
+        building_id: user.building_id,
+        nickName: user.nickName,
+        role: user.role,
+        level: user.level
+    }
+
+    session.pendingUserId = null
+
+    user.isVerified = true
+    user.verificationCode = null
+    user.codeAttempts = 0
+    user.codeExpiresAt = null
+    user.lastTimeOnline = Date.now()
+
+    user.points += 0.25;
+    if(user.points < 1){
+        user.level = "beginner"
+    }
+    else if(user.points < 2){
+        user.level = "intermediate"
+    }
+    else if(user.points < 3){
+        user.level = "advanced"
+    }
+    else{
+        user.level = "expert"
+    }
+
+    await user.save()
+}
+
+exports.comparePassword = async (password, hashedPassword) => {
+    return await bcrypt.compare(password,hashedPassword)
+}
+
+exports.generateCode = async (user) => {
+    if(!user){
+        throw new Error("Can't generate a code of a non existing user")
+    }
+    user.verificationCode = Math.floor(100000 + Math.random() * 900000).toString()
+    user.codeExpiresAt = Date.now() + 3 * 60 * 1000
+    user.codeAttempts = 0
+    await user.save()
 }
