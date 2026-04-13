@@ -21,6 +21,7 @@ function Register({ onSuccess}) {
     const [serverError, setServerError] = useState('')       // message d'erreur global (serveur)
     const [errors, setErrors] = useState({})                 // erreur par champ (locale)
     const [loading, setLoading] = useState(false)            // stockes si une requête est en cours
+    const [imagePreview, setImagePreview] = useState(null)
 
     // copie tout l'objet form et écrase seulement les champ qui a changé
     const handleChange = (e) => {
@@ -28,6 +29,25 @@ function Register({ onSuccess}) {
         setForm(prev => ({ ...prev, [name] : value }))
         setErrors(prev => ({ ...prev, [name] : '' }))       // effacer erreur quand user retape
         setServerError('')
+    }
+
+    const handleImageChange = async (e) => {
+        const file = e.target.files[0]
+        if (!file) {
+            return
+        }
+        if (!file.type.startsWith('image/')) {
+            setErrors(prev => ({ ...prev, image : 'Le fichier doit être une image'}))
+            return
+        }
+        try {
+            const compressed = await compressImage(file)
+            setForm(prev => ({ ...prev, image: compressed}))
+            setImagePreview(compressed)
+            setErrors(prev => ({ ...prev, image: ''}))
+        } catch {
+            setErrors(prev => ({ ...prev, image: "Erreur lors du traitement de l'image." }))
+        }
     }
 
     // Changement de pseudo
@@ -125,6 +145,29 @@ function Register({ onSuccess}) {
         return newErrors
     }
 
+    // Image user
+    const compressImage = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.onload = (e) => {
+                const img = new Image()
+                img.src = e.target.result
+                img.onload = () => {
+                    const canvas = document.createElement('canvas')
+                    canvas.width = 100
+                    canvas.height = 100
+                    const a = canvas.getContext('2d')
+                    a.drawImage(img, 0, 0, 100, 100)
+                    const compressed = canvas.toDataURL('image/jpeg', 0.7)
+                    resolve(compressed)
+                }
+            img.onerror = () => reject(new Error('Erreur de chargement image'))
+            }
+            reader.onerror = () => reject(new Error('Erreur de lecture fichier'))
+            reader.readAsDataURL(file)
+        })
+    }
+
     const navigate = useNavigate()
     // Soumission du formulaire
     const handleSubmit = async (e) => {
@@ -152,7 +195,7 @@ function Register({ onSuccess}) {
                     nickName: form.nickName,
                     gender: form.gender,
                     birthdate: form.birthdate,
-                    image: form.image || 'https://api.dicebear.com/7.x/thumbs/svg?seed=' + form.nickName
+                    image: form.image || `https://api.dicebear.com/7.x/thumbs/svg?seed=${form.nickName}`
                 })
             })
             const data = await res.json()
@@ -255,7 +298,6 @@ function Register({ onSuccess}) {
                             <option value="">-- Sélectionner --</option>
                             <option value="male">Homme</option>
                             <option value="female">Femme</option>
-                            <option value="other">Autre</option>
                         </select>
                         {errors.gender && <span className="register-error">{errors.gender}</span>}
                     </div>
@@ -308,6 +350,55 @@ function Register({ onSuccess}) {
                             <span className="register-success-msg">✓</span>
                         )}
                         {errors.confirmPassword && <span className="register-error">{errors.confirmPassword}</span>}
+                    </div>
+
+                    {/* Photo de profil */}
+                    <div className="register-field">
+                        <label className="register-label" htmlFor="image">
+                            Photo de profil
+                        </label>
+                        {imagePreview ? (
+                            <img
+                                src={imagePreview}
+                                alt="Aperçu"
+                                style={{
+                                    width: '80px',
+                                    height: '80px',
+                                    borderRadius: '50%',
+                                    objectFit: 'cover',
+                                    marginBottom: '8px',
+                                    border: '2px solid var(--yellow)'
+                                }}
+                            />
+                        ) : (
+                            // Placeholder si pas encore d'image
+                            <div style={{
+                                width: '80px',
+                                height: '80px',
+                                borderRadius: '50%',
+                                background: 'var(--bg-header)',
+                                border: '2px dashed rgba(255,255,255,0.2)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'var(--text-soft)',
+                                fontSize: '24px',
+                                marginBottom: '8px'
+                            }}>
+                            </div>
+                        )}
+                        <input 
+                            id="image"
+                            type="file"
+                            accept="image/"
+                            onChange={handleImageChange}
+                            className="register-input"
+                            style={{ padding: '8px' }}
+                        />
+                        <span style={{ color: 'var(--text-soft)', fontSize: '0.75rem' }}>
+                            ✓
+                        </span>
+                        {errors.image && <span className="register-error">{errors.image}</span>}
                     </div>
  
                     {serverError && (
