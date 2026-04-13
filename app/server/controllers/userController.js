@@ -23,12 +23,25 @@ exports.createUser = async (req, res) => {
     res.status(201).json(user)
 }
 
-exports.updateUser = async (req, res) => {
-    const user = await userService.updateUser(req.params.id, req.body)
+update = async (idUser, data, res) => {
+    const id = Number(idUser)
+    if (!Number.isInteger(id) || id <= 0) {
+        return res.status(400).json({ message: "Invalid id" })
+    }
+
+    const user = await userService.updateUser(id, data)
     if(!user){
         return res.status(404).json({ message: "User not found" })
     }
     res.json(user)
+}
+
+exports.updateProfile = async (req, res) => {
+    await update(req.session.user.id, req.body, res)
+}
+
+exports.updateUser = async (req, res) => {
+    await update(req.params.id, req.body, res)
 }
 
 exports.deleteUser = async (req, res) => {

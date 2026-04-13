@@ -74,24 +74,33 @@ exports.createUser = async (data) => {
 
 exports.updateUser = async (id, data) => {
 
-    if(!data || !data.password || !data.image || !data.firstName || !data.lastName || !data.nickName){
-        throw new Error("The data fields are not complete to create the user")
-    }
-
-    const hashedPassword = await bcrypt.hash(data.password, 10)
-
     try{
 
-        return await User.findOneAndUpdate(
-            { id: id },
-            {
-                firstName: data.firstName,
-                lastName: data.lastName,
-                nickName: data.nickName,
-                password: hashedPassword
-            },
-            { returnDocument: "after" })
-        // To return the user after the update
+        const user = await User.findOne({ id: id })
+
+        if(data.image){
+            user.image = data.image
+        }
+
+        if(data.firstName){
+            user.firstName = data.firstName
+        }
+
+        if(data.lastName){
+            user.lastName = data.lastName
+        }
+
+        if(data.nickName){
+            user.nickName = data.nickName
+        }
+
+        if(data.password){
+            user.password = await bcrypt.hash(data.password, 10)
+        }
+
+        await user.save()
+
+        return user
 
     } catch(err) {
         console.error(err)

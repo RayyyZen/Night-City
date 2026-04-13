@@ -21,10 +21,11 @@ router.post('/verify-code', limiter, userValidators.codeValidation, validate, us
 router.get('/session', userMiddlewares.auth, userController.session)
 router.get('/profile', userMiddlewares.auth, userController.myProfile)
 router.get('/profile/:id', userMiddlewares.auth, userController.publicProfile)
-router.get('/', userMiddlewares.auth, userMiddlewares.isAdmin, userController.getAllUsers)
+router.get('/', userController.getAllUsers)
 router.get('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, userController.getUserById)
 router.post('/', limiter, userController.createUser)
-router.put('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, userController.updateUser)
 router.delete('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, userController.deleteUser)
+router.put('/update/:id', limiter, userMiddlewares.auth, userMiddlewares.isAdmin, userController.updateUser)
+router.put('/update', limiter, userMiddlewares.auth, userController.updateProfile)
 
 module.exports = router
