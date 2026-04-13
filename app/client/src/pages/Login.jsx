@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 export default function Login() {
     const [email, setEmail] = useState('')
@@ -40,10 +41,29 @@ export default function Login() {
     }
 
     return (
-        <form onSubmit={submitLogin}>
+
+    <>
+
+    <header className="header">
+        <Link to="/" class="logo">Night-Tower</Link>
+
+        <nav className="nav">
+          <Link className ="link" to="/">Home</Link>
+          <Link className ="link"to="/login">Sign-in</Link>
+          <Link className ="link" to="/register">Sign-up</Link>
+          <Link className ="link" to="/profile">Profile</Link>
+        </nav>
+      </header>
+
+
+        <div className="center">
+            
+            <form className="form" onSubmit={submitLogin}>
+                <h1 className='formName'> Login :</h1>
             <label>
-                Mail : 
+                Mail :  
                 <input 
+                    className="input"
                     type="email"
                     name="email"
                     value={email} 
@@ -57,6 +77,7 @@ export default function Login() {
             <label>
                 Password : 
                 <input 
+                    className="input"
                     type="password"
                     name="password"
                     value={password}
@@ -67,11 +88,18 @@ export default function Login() {
                 />
             </label>
 
-            <button type="submit">
+            <button className="submit-button" type="submit">
                 Submit
             </button>
 
             {error && <div>{error}</div>}
         </form>
+        </div>
+
+        <footer className="footer">
+            <h1> AtaOFF</h1>
+        </footer>
+        </>
+        
     )
 }
