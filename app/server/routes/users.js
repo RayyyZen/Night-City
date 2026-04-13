@@ -25,7 +25,7 @@ router.get('/', userController.getAllUsers)
 router.get('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, userController.getUserById)
 router.post('/', limiter, userController.createUser)
 router.delete('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, userController.deleteUser)
-router.put('/update/:id', limiter, userMiddlewares.auth, userMiddlewares.isAdmin, userController.updateUser)
 router.put('/update', limiter, userMiddlewares.auth, userController.updateProfile)
+router.put('/update/:id', limiter, userMiddlewares.auth, userMiddlewares.isAdmin, userController.updateUser)
 
 module.exports = router
