@@ -85,6 +85,42 @@ function Register({ onSuccess}) {
         }
         if (!form.birthdate) {
             newErrors.birthdate = 'Date de naissance manquante'
+        } else {
+            const date = new Date(form.birthdate)
+            const year = date.getFullYear()
+            const month = date.getMonth() + 1
+            const day = date.getDay()
+            const currentYear = new Date().getFullYear()
+            if (year.toString().length > 4) {
+                newErrors.birthdate = 'Année invalide (max. 4 chiffres)'
+            } else if (year < 1900) {
+                newErrors.birthdate = 'Année invalide (min. 1900)'
+            } else if (year > currentYear) {
+                newErrors.birthdate = `L'année de ne peut pas dépasser ${currentYear}`
+            } else if (month < 1 || month > 12) {
+                newErrors.birthdate = 'Le mois doit être compris entre 1 et 12'
+            } else if (day < 1) {
+                e.birthdate = 'Le jour est invalide'
+            } else {
+                const daysInMonth = {
+                    1: 31, 2: null, 3: 31, 4: 30,       // null pour février
+                    5: 31, 6: 30,  7: 31, 8: 31,
+                    9: 30, 10: 31, 11: 30, 12: 31
+                }
+                // vérification année bissextile
+                const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)
+                daysInMonth[2] = isLeapYear ? 29 : 28
+                const maxDay = daysInMonth[month]
+                if (day > maxDay) {
+                    if (month === 2) {
+                        newErrors.birthdate = isLeapYear
+                            ? 'Février a au maximum 29 jours (année bissextile)'
+                            : 'Février a au maximum 28 jours'
+                    } else {
+                        newErrors.birthdate = 'Ce mois a au maximum ${maxDay} jours'
+                    }
+                }
+            }
         }
         return newErrors
     }
@@ -233,6 +269,8 @@ function Register({ onSuccess}) {
                             name="birthdate"
                             value={form.birthdate}
                             onChange={handleChange}
+                            min="1900-01-01"
+                            max={`${new Date().getFullYear()}-12-31`}
                             className={`register-input ${errors.birthdate ? 'register-input--error' : ''}`}
                         />
                         {errors.birthdate && <span className="register-error">{errors.birthdate}</span>}
