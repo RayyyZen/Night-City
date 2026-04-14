@@ -6,6 +6,7 @@ export default function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    const [fieldType, setFieldType] = useState('password')
 
     const navigate = useNavigate()
 
@@ -45,7 +46,7 @@ export default function Login() {
     <>
 
     <header className="header">
-        <Link to="/" class="logo">Night-Tower</Link>
+        <Link to="/" className="logo">Night-Tower</Link>
 
         <nav className="nav">
           <Link className ="link" to="/">Home</Link>
@@ -59,9 +60,9 @@ export default function Login() {
         <div className="center">
             
             <form className="form" onSubmit={submitLogin}>
-                <h1 className='formName'> Login :</h1>
-            <label>
-                Mail :  
+                <h1 className='formName'>Login</h1>
+            <label className="align">
+                Mail
                 <input 
                     className="input"
                     type="email"
@@ -74,11 +75,11 @@ export default function Login() {
                 />
             </label>
 
-            <label>
-                Password : 
+            <label className="align">
+                Password
                 <input 
                     className="input"
-                    type="password"
+                    type={fieldType}
                     name="password"
                     value={password}
                     onChange={e => {
@@ -86,6 +87,11 @@ export default function Login() {
                         setError('')
                     }}
                 />
+
+                { fieldType == "password" && <button className="input" onClick={e => { setFieldType("text") }}>Show</button> }
+
+                { fieldType == "text" && <button className="input" onClick={e => { setFieldType("password") }}>Hide</button> }
+
             </label>
 
             <button className="submit-button" type="submit">
