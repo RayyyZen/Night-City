@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import HeaderPage from '../components/HeaderPage.jsx';
 
 export default function Home() {
   const news = [
@@ -46,17 +46,9 @@ export default function Home() {
   };
 
   return (
+    <>
+    <HeaderPage />
     <div className="home-page">
-      <header className="header">
-        <Link to="/home" class="logo">Night-Tower</Link>
-
-        <nav className="nav">
-          <Link to="/home">Home</Link>
-          <Link to="/login">Sign-in</Link>
-          <Link to="/register">Sign-up</Link>
-          <Link to="/profile">Profile</Link>
-        </nav>
-      </header>
 
       <main>
         <section className="hero">
@@ -96,5 +88,6 @@ export default function Home() {
         </section>
       </main>
     </div>
+    </>
   );
 }

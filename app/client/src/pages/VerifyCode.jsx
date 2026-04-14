@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import HeaderPage from '../components/HeaderPage.jsx';
 
 export default function VerifyCode() {
     const [code, setCode] = useState('')
@@ -41,16 +41,7 @@ export default function VerifyCode() {
     return (
         <>
 
-        <header className="header">
-            <Link to="/" className="logo">Night-Tower</Link>
-
-            <nav className="nav">
-            <Link className ="link" to="/">Home</Link>
-            <Link className ="link"to="/login">Sign-in</Link>
-            <Link className ="link" to="/register">Sign-up</Link>
-            <Link className ="link" to="/profile">Profile</Link>
-            </nav>
-        </header>
+        <HeaderPage />
 
         <div className="center">
         <form className="form" onSubmit={submitCode}>
