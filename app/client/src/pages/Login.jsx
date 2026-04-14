@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import HeaderPage from '../components/HeaderPage.jsx';
+import FooterPage from '../components/FooterPage.jsx';
 
 export default function Login() {
     const [email, setEmail] = useState('')
@@ -19,7 +20,7 @@ export default function Login() {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({
+            body: JSON.stringify({  
                 email: email,
                 password: password
             })
@@ -93,9 +94,9 @@ export default function Login() {
         </form>
         </div>
 
-        <footer className="footer">
-            <h1> AtaOFF</h1>
-        </footer>
+        
+    
+        <FooterPage/>
         </>
         
     )

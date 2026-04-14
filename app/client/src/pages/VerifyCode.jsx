@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import HeaderPage from '../components/HeaderPage.jsx';
+import FooterPage from '../components/FooterPage.jsx';
 
 export default function VerifyCode() {
     const [code, setCode] = useState('')
@@ -65,6 +66,8 @@ export default function VerifyCode() {
             {error && <div>{error}</div>}
         </form>
         </div>
+
+        <FooterPage/>
 
         </>
     )

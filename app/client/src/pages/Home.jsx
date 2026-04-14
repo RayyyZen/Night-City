@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import HeaderPage from '../components/HeaderPage.jsx';
+import FooterPage from '../components/FooterPage.jsx';
 
 export default function Home() {
   const news = [
@@ -51,20 +52,21 @@ export default function Home() {
     <div className="home-page">
 
       <main>
-        <section className="hero">
-          <h1>Welcome on Night-Tower</h1>
+        <section className="center">
+          <h1 class="title">Welcome on Night-Tower</h1>
           <p>
             An intelligent platform to centralize information,
             services, and connected objects.
           </p>
-          <button>Discover</button>
+          <button class="submit-button"> Discover</button>
         </section>
 
-        <section className="news-section">
+        <section className="center">
           <h2>Latest news</h2>
 
           <div className="search-bar">
             <input
+              class="input"
               type="text"
               placeholder="Search news..."
               value={query}
@@ -88,6 +90,7 @@ export default function Home() {
         </section>
       </main>
     </div>
+    <FooterPage/>
     </>
   );
 }
