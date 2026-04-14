@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 export default function VerifyCode() {
     const [code, setCode] = useState('')
@@ -38,10 +39,25 @@ export default function VerifyCode() {
     }
 
     return (
-        <form onSubmit={submitCode}>
-            <label>
-                Code : 
+        <>
+
+        <header className="header">
+            <Link to="/" className="logo">Night-Tower</Link>
+
+            <nav className="nav">
+            <Link className ="link" to="/">Home</Link>
+            <Link className ="link"to="/login">Sign-in</Link>
+            <Link className ="link" to="/register">Sign-up</Link>
+            <Link className ="link" to="/profile">Profile</Link>
+            </nav>
+        </header>
+
+        <div className="center">
+        <form className="form" onSubmit={submitCode}>
+            <h1 className='formName'>Code</h1>
+            <label className="align">
                 <input 
+                    className="input"
                     name="verifyCode"
                     type="text"
                     value={code}
@@ -51,11 +67,14 @@ export default function VerifyCode() {
                 />
             </label>
 
-            <button type="submit">
+            <button className="submit-button" type="submit">
                 Submit
             </button>
 
             {error && <div>{error}</div>}
         </form>
+        </div>
+
+        </>
     )
 }
