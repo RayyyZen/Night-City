@@ -214,7 +214,20 @@ function Register({ onSuccess}) {
 
     return (
         <div className="register-page">
+
+            <header className="header">
+                <Link to="/home" class="logo">Night-Tower</Link>
+
+                <nav className="nav">
+                    <Link to="/home">Home</Link>
+                    <Link to="/login">Sign-in</Link>
+                    <Link to="/register">Sign-up</Link>
+                    <Link to="/profile">Profile</Link>
+            </nav>
+            </header>
+
             <div className="register-card">
+                
  
                 <h2 className="register-title">Créer un compte</h2>
  
