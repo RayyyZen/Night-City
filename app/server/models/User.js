@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
   },
   building_role: {
     type: String,
+    default: "none"
   },
   image: {
     type: String,
@@ -32,7 +33,8 @@ const userSchema = new mongoose.Schema({
   },
   nickName: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   birthdate: {
     type: Date,

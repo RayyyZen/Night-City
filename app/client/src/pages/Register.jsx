@@ -1,10 +1,27 @@
 import { useState, useEffect } from "react"
 import { useNavigate, Link } from 'react-router-dom'
 import '../styles.css'
+import { accessPages } from '../services/accessPages';
 
 const API = 'http://localhost:3000'
 
 function Register({ onSuccess}) {
+
+    const navigate = useNavigate()
+        
+    useEffect(() => {
+        async function checkPage(){
+            const { canAccessToPage } = await accessPages("register")
+
+            if (!canAccessToPage) {
+                navigate("/home")
+            }
+        }
+
+        checkPage()
+        
+    }, [navigate])
+
     const [form, setForm] = useState({
         email: '',
         password: '',
@@ -168,7 +185,6 @@ function Register({ onSuccess}) {
         })
     }
 
-    const navigate = useNavigate()
     // Soumission du formulaire
     const handleSubmit = async (e) => {
         e.preventDefault()
