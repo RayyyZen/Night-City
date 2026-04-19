@@ -18,6 +18,7 @@ body {
   font-weight: bold;
   background-color: #1A1D23;
   color: #F0F0F0;
+
 }
 
 .header{
@@ -154,18 +155,54 @@ a{
   margin: 0px 20px;
 }
 
-.resend-button {
-  outline: none;
-  font-family : Orbitron;
-  font-size: 12px;
-  background-color: #252A34;
-  color : #FFD700 ;
-  text-decoration: underline;
-  cursor: pointer;
-  outline: none;
-  border: none;
+.title{
+
+  font-family: Orbitron;
+  font-size : 3rem;
+
 }
 
-.resend-button:hover {
-  color: #ffea00;
+.news-container{
+  margin: 30px;
+  display: flex; 
+  flex-direction: column;
+  gap : 20px;
+}
+
+.news-card:hover{
+  transform : scale(1.1);
+}
+
+.news-card{
+
+  border : 5px solid #1F6FEB;
+  border-radius : 10px;
+  transition: all 0.3s ease-in-out;
+
+}
+
+
+.footer {
+  padding:20px 0;
+  background-color:#252A34;
+  color:#F0F0F0;
+  margin-top: 40px;
+}
+
+.footer ul {
+  padding:0;
+  list-style:none;
+  text-align:center;
+  font-size:18px;
+  line-height:1.6;
+  margin-bottom:0;
+}
+
+
+.footer .copyright {
+  margin-top:15px;
+  text-align:center;
+  font-size:13px;
+  color:#FFD700;
+  margin-bottom:0;
 }

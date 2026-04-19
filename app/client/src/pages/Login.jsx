@@ -36,7 +36,7 @@ export default function Login() {
                 'Content-Type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({
+            body: JSON.stringify({  
                 email: email,
                 password: password
             })
@@ -111,9 +111,9 @@ export default function Login() {
         </form>
         </div>
 
-        <footer className="footer">
-            <h1> AtaOFF</h1>
-        </footer>
+        
+    
+        <FooterPage/>
         </>
         
     )
