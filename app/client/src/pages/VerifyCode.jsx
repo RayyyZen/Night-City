@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import HeaderPage from '../components/HeaderPage.jsx';
 import { submitCode, resendCode } from '../services/userService.js';
 import { accessPages } from '../services/accessPages';
+import FooterPage from '../components/FooterPage.jsx';
+
 
 export default function VerifyCode() {
 

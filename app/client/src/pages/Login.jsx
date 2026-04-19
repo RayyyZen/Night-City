@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HeaderPage from '../components/HeaderPage.jsx';
 import { accessPages } from '../services/accessPages';
 import { useEffect } from "react";
-
+import FooterPage from '../components/FooterPage.jsx';
 
 export default function Login() {
 

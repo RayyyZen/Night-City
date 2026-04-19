@@ -144,6 +144,22 @@ a{
   text-align: center;
 }
 
+.resend-button {
+  outline: none;
+  font-family : Orbitron;
+  font-size: 12px;
+  background-color: #252A34;
+  color : #FFD700 ;
+  text-decoration: underline;
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+
+.resend-button:hover {
+  color: #ffea00;
+}
+
 .align{
   display: flex;
   flex-direction:column;
