@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate, Link } from 'react-router-dom'
-import '../styles.css'
+import HeaderPage from '../components/HeaderPage.jsx';
+import FooterPage from '../components/FooterPage.jsx';
 
 const API = 'http://localhost:3000'
 
@@ -213,30 +214,14 @@ function Register({ onSuccess}) {
     }
 
     return (
-        <div className="register-page">
-
-            <header className="header">
-                <Link to="/home" class="logo">Night-Tower</Link>
-
-                <nav className="nav">
-                    <Link to="/home">Home</Link>
-                    <Link to="/login">Sign-in</Link>
-                    <Link to="/register">Sign-up</Link>
-                    <Link to="/profile">Profile</Link>
-            </nav>
-            </header>
-
-            <div className="register-card">
-                
- 
-                <h2 className="register-title">Créer un compte</h2>
- 
-                <form onSubmit={handleSubmit}>
- 
+        <>
+        <HeaderPage page={"register"}/>
+        <div className="center">
+            <form className="form" onSubmit={handleSubmit}>
+                <h1 className="formName">Créer un compte</h1>
                     {/* Email */}
-                    <div className="register-field">
-                        <label className="register-label" htmlFor="email">Email</label>
-                        <input
+                        <label className="align">Email
+                            <input
                             id="email"
                             type="email"
                             name="email"
@@ -246,44 +231,37 @@ function Register({ onSuccess}) {
                             className={`register-input ${errors.email ? 'register-input--error' : ''}`}
                         />
                         {errors.email && <span className="register-error">{errors.email}</span>}
-                    </div>
  
+                        </label>
                     {/* Prénom */}
-                    <div className="register-field">
-                        <label className="register-label" htmlFor="firstName">Prénom</label>
+                    <label className="align">Prénom
                         <input
                             id="firstName"
                             type="text"
                             name="firstName"
                             value={form.firstName}
                             onChange={handleChange}
-                            className={`register-input ${errors.firstName ? 'register-input--error' : ''}`}
                         />
                         {errors.firstName && <span className="register-error">{errors.firstName}</span>}
-                    </div>
+                    </label>
  
                     {/* Nom */}
-                    <div className="register-field">
-                        <label className="register-label" htmlFor="lastName">Nom</label>
+                    <label className="align">Nom
                         <input
                             id="lastName"
                             type="text"
                             name="lastName"
                             value={form.lastName}
                             onChange={handleChange}
-                            className={`register-input ${errors.lastName ? 'register-input--error' : ''}`}
                         />
                         {errors.lastName && <span className="register-error">{errors.lastName}</span>}
-                    </div>
+                    </label>
  
                     {/* Pseudo (nickName) */}
-                    <div className="register-field">
-                        <label className="register-label" htmlFor="nickName">
-                            Pseudo
+                    <label className="align">Pseudo
                             {pseudoStatus === 'checking'  && <span className="register-badge register-badge--checking">Vérification…</span>}
                             {pseudoStatus === 'available' && <span className="register-badge register-badge--available">✓</span>}
                             {pseudoStatus === 'taken'     && <span className="register-badge register-badge--taken">✗ Déjà pris</span>}
-                        </label>
                         <input
                             id="nickName"
                             type="text"
@@ -296,11 +274,10 @@ function Register({ onSuccess}) {
                             }`}
                         />
                         {errors.nickName && <span className="register-error">{errors.nickName}</span>}
-                    </div>
+                    </label>
  
                     {/* Genre */}
-                    <div className="register-field">
-                        <label className="register-label" htmlFor="gender">Genre</label>
+                    <label className="align">Genre
                         <select
                             id="gender"
                             name="gender"
@@ -313,11 +290,10 @@ function Register({ onSuccess}) {
                             <option value="female">Femme</option>
                         </select>
                         {errors.gender && <span className="register-error">{errors.gender}</span>}
-                    </div>
+                    </label>
  
                     {/* Date de naissance */}
-                    <div className="register-field">
-                        <label className="register-label" htmlFor="birthdate">Date de naissance</label>
+                    <label className="align">Date de naissance
                         <input
                             id="birthdate"
                             type="date"
@@ -329,11 +305,10 @@ function Register({ onSuccess}) {
                             className={`register-input ${errors.birthdate ? 'register-input--error' : ''}`}
                         />
                         {errors.birthdate && <span className="register-error">{errors.birthdate}</span>}
-                    </div>
+                    </label>
  
                     {/* Mot de passe */}
-                    <div className="register-field">
-                        <label className="register-label" htmlFor="password">Mot de passe</label>
+                    <label className="align">Mot de passe
                         <input
                             id="password"
                             type="password"
@@ -343,11 +318,10 @@ function Register({ onSuccess}) {
                             className={`register-input ${errors.password ? 'register-input--error' : ''}`}
                         />
                         {errors.password && <span className="register-error">{errors.password}</span>}
-                    </div>
+                    </label>
  
                     {/* Confirmation mot de passe */}
-                    <div className="register-field">
-                        <label className="register-label" htmlFor="confirmPassword">Confirmer le mot de passe</label>
+                    <label className="align">Confirmer le mot de passe
                         <input
                             id="confirmPassword"
                             type="password"
@@ -359,17 +333,11 @@ function Register({ onSuccess}) {
                                 (form.confirmPassword && form.password === form.confirmPassword) ? 'register-input--valid' : ''
                             }`}
                         />
-                        {(form.confirmPassword && form.password === form.confirmPassword) && (
-                            <span className="register-success-msg">✓</span>
-                        )}
                         {errors.confirmPassword && <span className="register-error">{errors.confirmPassword}</span>}
-                    </div>
+                    </label>
 
                     {/* Photo de profil */}
-                    <div className="register-field">
-                        <label className="register-label" htmlFor="image">
-                            Photo de profil
-                        </label>
+                    <label className="align">Photo de profil
                         {imagePreview ? (
                             <img
                                 src={imagePreview}
@@ -408,11 +376,8 @@ function Register({ onSuccess}) {
                             className="register-input"
                             style={{ padding: '8px' }}
                         />
-                        <span style={{ color: 'var(--text-soft)', fontSize: '0.75rem' }}>
-                            ✓
-                        </span>
                         {errors.image && <span className="register-error">{errors.image}</span>}
-                    </div>
+                    </label>
  
                     {serverError && (
                         <div className="register-server-error">{serverError}</div>
@@ -420,20 +385,21 @@ function Register({ onSuccess}) {
  
                     <button
                         type="submit"
-                        className="register-btn"
+                        className="submit-button"
                         disabled={loading || pseudoStatus === 'taken'}
                     >
                         {loading ? 'Inscription en cours...' : "S'inscrire"}
                     </button>
+                    <p style={{ fontFamily: 'Orbitron', fontSize: '0.85rem' }}>
+                        Déjà un compte ?{' '}
+                        <Link to="/login" style={{ color: '#FFD700' }}>Sign-in</Link>
+                    </p>
  
-                </form>
+            </form>
  
-                <p className="register-link-row">
-                    Déjà un compte ? <Link to="/login">Se connecter</Link>
-                </p>
- 
-            </div>
         </div>
+        <FooterPage />
+    </>
     )
 }
 
