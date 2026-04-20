@@ -35,7 +35,7 @@ function Register() {
         image: ''
     })
 
-    const [pseudoStatus, setPseudoStatus] = useState('idle') // stockes l'état de vérification du pseudo
+    const pseudoStatus = useState('idle') // stockes l'état de vérification du pseudo
     const [serverError, setServerError] = useState('')       // message d'erreur global (serveur)
     const [errors, setErrors] = useState({})                 // erreur par champ (locale)
     const [loading, setLoading] = useState(false)            // stockes si une requête est en cours
@@ -240,9 +240,7 @@ function Register() {
                         {errors.image && <span className="register-error">{errors.image}</span>}
                     </label>
  
-                    {serverError && (
-                        <div className="register-server-error">{serverError}</div>
-                    )}
+                    
                     {/* Email */}
                         <label className="align">Email
                             <input
@@ -361,6 +359,11 @@ function Register() {
                         />
                         {errors.confirmPassword && <span className="register-error">{errors.confirmPassword}</span>}
                     </label> 
+
+                    {serverError && (
+                        <div className="register-server-error">{serverError}</div>
+                    )}
+
                     <button
                         type="submit"
                         className="submit-button"
