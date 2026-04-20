@@ -46,7 +46,7 @@ export default function MyBuilding() {
 
         { building &&
             <div className="center">
-                <div> {building.name} </div>
+                <h1 className="title"> {building.name} </h1>
                 <div> {building.address} </div>
                 <div> {building.area} </div>
             </div>

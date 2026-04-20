@@ -178,18 +178,18 @@ a{
 
 }
 
-.news-container{
+.card-container{
   margin: 30px;
   display: flex; 
   flex-direction: column;
   gap : 20px;
 }
 
-.news-card:hover{
+.card:hover{
   transform : scale(1.1);
 }
 
-.news-card{
+.card{
 
   border : 5px solid #1F6FEB;
   border-radius : 10px;
@@ -253,3 +253,4 @@ a{
   font-size: 24px;
   margin-bottom: 8px;
 }
+

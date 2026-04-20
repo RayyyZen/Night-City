@@ -48,10 +48,11 @@ export default function Building() {
 
         { id && building &&
             <div className="center">
-                <div> {building.name} </div>
+                <h1 className="title"> {building.name} </h1>
                 <div> {building.address} </div>
                 <div> {building.area} </div>
-                <button onClick={joinBuildingHandler}>Join</button>
+
+                <button className="submit-button" onClick={joinBuildingHandler}>Join</button>
                 { error && <div>{error}</div> }
             </div>
         }

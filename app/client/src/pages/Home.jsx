@@ -74,10 +74,10 @@ export default function Home() {
             />
           </div>
 
-          <div className="news-container">
+          <div className="card-container">
             {filteredNews.length > 0 ? (
               filteredNews.map((item) => (
-                <article className="news-card" key={item.id}>
+                <article className="card" key={item.id}>
                   <h3>{highlight(item.title)}</h3>
                   <p className="date">{item.date}</p>
                   <p>{highlight(item.content)}</p>

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { getAllBuildings } from '../services/buildingService.js';
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import FooterPage from '../components/FooterPage.jsx';
 
 export default function Buildings() {
 
@@ -22,9 +23,9 @@ export default function Buildings() {
     }, [])
 
     const listBuildings = buildings?.map(building => 
-        <li key={building.id} onClick={() => navigate(`/building/${building.id}`)}>
-            <div> {building.name} </div>
-        </li>
+        <div key={building.id} onClick={() => navigate(`/building/${building.id}`)} >
+            <article className="card"> {building.name} </article>
+        </div>
     )
 
     return (
@@ -32,11 +33,21 @@ export default function Buildings() {
 
         <HeaderPage page={"buildings"} />
 
-        <div className="center">
-            <ul>
+        <div className="center" >
+
+            <div className="card-container">
+
+            
                 {listBuildings}
-            </ul>
+        
+
+            </div>
+    
+            
         </div>
+
+
+        <FooterPage/>
 
         </>
     )
