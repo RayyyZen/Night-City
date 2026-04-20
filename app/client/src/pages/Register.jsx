@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate, Link } from 'react-router-dom'
 import HeaderPage from '../components/HeaderPage.jsx';
+import { accessPages } from '../services/accessPages';
 import FooterPage from '../components/FooterPage.jsx';
 
 const API = 'http://localhost:3000'
