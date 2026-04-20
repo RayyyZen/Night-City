@@ -8,7 +8,7 @@ exports.registerValidation = [
     body('nickName').notEmpty(),
     body('birthdate').notEmpty().isISO8601(),
     body('email').isEmail(),
-    body('password').notEmpty(),
+    body('password').notEmpty()
 ]
 
 exports.loginValidation = [
@@ -18,4 +18,8 @@ exports.loginValidation = [
 
 exports.codeValidation = [
     body('code').notEmpty().isInt({ min: 1 })
+]
+
+exports.buildingRoleValidation = [
+    body('building_role').notEmpty()
 ]

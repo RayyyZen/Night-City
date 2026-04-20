@@ -1,51 +1,61 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import HeaderPage from '../components/HeaderPage.jsx';
+import { submitCode, resendCode } from '../services/userService.js';
+import { accessPages } from '../services/accessPages';
 import FooterPage from '../components/FooterPage.jsx';
 
+
 export default function VerifyCode() {
+
+    const navigate = useNavigate()
+    
+    useEffect(() => {
+        async function checkPage(){
+            const { canAccessToPage } = await accessPages("code")
+
+            if (!canAccessToPage) {
+                navigate("/home")
+            }
+        }
+
+        checkPage()
+        
+    }, [navigate])
+
     const [code, setCode] = useState('')
     const [error, setError] = useState('')
 
-    const navigate = useNavigate()
-
-    async function submitCode(e){
+    async function submitCodeHandler(e){
         e.preventDefault()
 
-        const res = await fetch('http://localhost:3000/users/verify-code', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                code: code
-            })
-        })
+        const { success, message } = await submitCode(code)
 
-        let data = null
-
-        try{
-            data = await res.json()
-        } catch(err) {
-            data = { message: "Server error" }
+        if(success){
+            navigate('/profile')
         }
-
-        if (!res.ok) {
-            setError(data.message)
-            return
+        else{
+            setError(message)
         }
+    }
 
-        navigate('/profile')
+    async function resendCodeHandler(e){
+        e.preventDefault()
+
+        const { message } = await resendCode()
+
+        setError(message)
+        setCode("")
     }
 
     return (
         <>
 
-        <HeaderPage />
+        <HeaderPage page={"code"} />
 
         <div className="center">
-        <form className="form" onSubmit={submitCode}>
+        <form className="form" onSubmit={submitCodeHandler}>
             <h1 className='formName'>Code</h1>
             <label className="align">
                 <input 
@@ -58,6 +68,10 @@ export default function VerifyCode() {
                     }}
                 />
             </label>
+
+            <button className="resend-button" type="button" onClick={resendCodeHandler}>
+                Resend the code
+            </button>
 
             <button className="submit-button" type="submit">
                 Submit

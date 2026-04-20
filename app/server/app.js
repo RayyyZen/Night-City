@@ -31,8 +31,10 @@ const connectDB = require('./config/db')
 connectDB()
 
 const userRoutes = require('./routes/users')
+const buildingRoutes = require('./routes/buildings')
 
 app.use('/users', userRoutes)
+app.use('/buildings', buildingRoutes)
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`)

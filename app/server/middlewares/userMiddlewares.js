@@ -14,7 +14,7 @@ exports.isAdmin = (req, res, next) => {
 
 exports.isLogged = (req, res, next) => {
     if(req.session.user){
-        return res.json(403).json({ message: "User already logged in" })
+        return res.status(403).json({ message: "User already logged in" })
     }
     next()
 }

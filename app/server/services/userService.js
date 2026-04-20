@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const Building = require('../models/Building')
 const Counter = require('../models/Counter')
 
 const bcrypt = require('bcrypt')
@@ -90,10 +91,6 @@ exports.updateUser = async (id, data) => {
             user.lastName = data.lastName
         }
 
-        if(data.nickName){
-            user.nickName = data.nickName
-        }
-
         if(data.password){
             user.password = await bcrypt.hash(data.password, 10)
         }
@@ -117,6 +114,15 @@ exports.deleteUserById = async (id) => {
     }
 }
 
+exports.getUserByNickName = async (nickName) => {
+    try{
+        return await User.findOne({ nickName: nickName })
+    } catch(err) {
+        console.error(err)
+        return null
+    }
+}
+
 exports.getUserByEmail = async (email) => {
     try{
         return await User.findOne({ email: email })
@@ -131,9 +137,11 @@ exports.loginSuccess = async (user, session) => {
         throw new Error("Can't finalize the user's entry")
     }
 
+    const building_id = !user.building_id ? null : user.building_id
+
     session.user = {
         id: user.id,
-        building_id: user.building_id,
+        building_id: building_id,
         nickName: user.nickName,
         role: user.role,
         level: user.level
@@ -176,4 +184,42 @@ exports.generateCode = async (user) => {
     user.codeExpiresAt = Date.now() + 3 * 60 * 1000
     user.codeAttempts = 0
     await user.save()
+}
+
+exports.joinBuilding = async (userId, buildingId) => {
+    try{
+        const building = await Building.findOne({ id: buildingId })
+        if(!building){
+            return null
+        }
+
+        return await User.findOneAndUpdate({ id: userId }, {
+            building_id: buildingId,
+            building_role: "none"
+        }, { returnDocument: "after"})
+    } catch (err) {
+        console.error(err)
+        return null
+    }
+}
+
+exports.updateBuildingRole = async (id, building_role) => {
+    try{
+        return await User.findOneAndUpdate({ id: id }, { building_role: building_role }, { returnDocument: "after"})
+    } catch (err) {
+        console.error(err)
+        return null
+    }
+}
+
+exports.kickFromBuilding = async (id) => {
+    try{
+        return await User.findOneAndUpdate({ id: id }, {
+            $unset: { building_id: "" },
+            $unset: { building_role: "" }
+        })
+    } catch (err) {
+        console.error(err)
+        return null
+    }
 }

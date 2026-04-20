@@ -57,12 +57,14 @@ body {
 }
 
 .link{
-
+  background: none;
+  outline: none;
+  border: none;
   color: #F0F0F0;
   font-family : Orbitron;
   font-size: 1rem;
   transition: all 0.2s ease;
-
+  cursor: pointer;
 }
 
 .link:hover{
@@ -140,6 +142,22 @@ a{
   padding : 5px;  
   outline: none;
   text-align: center;
+}
+
+.resend-button {
+  outline: none;
+  font-family : Orbitron;
+  font-size: 12px;
+  background-color: #252A34;
+  color : #FFD700 ;
+  text-decoration: underline;
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+
+.resend-button:hover {
+  color: #ffea00;
 }
 
 .align{

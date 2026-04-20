@@ -48,7 +48,7 @@ export default function Home() {
 
   return (
     <>
-    <HeaderPage />
+    <HeaderPage page={"home"} />
     <div className="home-page">
 
       <main>

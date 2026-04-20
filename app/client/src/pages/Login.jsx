@@ -1,15 +1,31 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import HeaderPage from '../components/HeaderPage.jsx';
+import { accessPages } from '../services/accessPages';
+import { useEffect } from "react";
 import FooterPage from '../components/FooterPage.jsx';
 
 export default function Login() {
+
+    const navigate = useNavigate()
+    
+    useEffect(() => {
+        async function checkPage(){
+            const { canAccessToPage } = await accessPages("login")
+
+            if (!canAccessToPage) {
+                navigate("/home")
+            }
+        }
+
+        checkPage()
+        
+    }, [navigate])
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [fieldType, setFieldType] = useState('password')
-
-    const navigate = useNavigate()
 
     async function submitLogin(e){
         e.preventDefault()
@@ -32,6 +48,7 @@ export default function Login() {
             data = await res.json()
         } catch(err) {
             data = { message: "Server error" }
+            console.log(err)
         }
 
         if (!res.ok) {
@@ -46,7 +63,7 @@ export default function Login() {
 
     <>
 
-    <HeaderPage />
+    <HeaderPage page={"login"} />
 
 
         <div className="center">
@@ -80,9 +97,9 @@ export default function Login() {
                     }}
                 />
 
-                { fieldType == "password" && <button className="input" onClick={e => { setFieldType("text") }}>Show</button> }
+                { fieldType == "password" && <button type="button" className="input" onClick={() => { setFieldType("text") }}>Show</button> }
 
-                { fieldType == "text" && <button className="input" onClick={e => { setFieldType("password") }}>Hide</button> }
+                { fieldType == "text" && <button type="button" className="input" onClick={() => { setFieldType("password") }}>Hide</button> }
 
             </label>
 

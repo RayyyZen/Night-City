@@ -4,6 +4,10 @@ import Login from './pages/Login'
 import Profile from './pages/Profile'
 import VerifyCode from './pages/VerifyCode'
 import Register from './pages/Register'
+import Buildings from './pages/Buildings'
+import Building from './pages/Building'
+import MyBuilding from './pages/MyBuilding'
+import CreateBuilding from './pages/CreateBuilding'
 
 function App() {
   return (
@@ -13,6 +17,10 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/verify-code" element={<VerifyCode />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/buildings" element={<Buildings />} />
+      <Route path="/building/:id" element={<Building />} />
+      <Route path="/mybuilding" element={<MyBuilding />} />
+      <Route path="/create-building" element={<CreateBuilding />} />
     </Routes>
   )
 }

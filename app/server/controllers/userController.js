@@ -1,4 +1,5 @@
 const userService = require('../services/userService')
+const buildingService = require('../services/buildingService')
 
 const sendCode = require('../config/resend')
 
@@ -16,10 +17,21 @@ exports.getUserById = async (req, res) => {
 }
 
 exports.createUser = async (req, res) => {
+    const u1 = await userService.getUserByEmail(req.body.email)
+    if(u1){
+        return res.status(401).json({ message: "Email already used by another user" })
+    }
+
+    const u2 = await userService.getUserByNickName(req.body.nickName)
+    if(u2){
+        return res.status(401).json({ message: "Nick name already used by another user" })
+    }
+
     const user = await userService.createUser(req.body)
     if(!user){
         return res.status(401).json({ message: "User couldn't be created" })
     }
+
     res.status(201).json(user)
 }
 
@@ -49,16 +61,10 @@ exports.deleteUser = async (req, res) => {
     if(!user){
         return res.status(404).json({ message: "User not found" })
     }
-    res.send("User deleted")
+    res.json({ message: "User deleted" })
 }
 
 exports.register = async (req, res) => {
-    const u = await userService.getUserByEmail(req.body.email)
-
-    if(u){
-        return res.status(401).json({ message: "Email already used by another user" })
-    }
-
     const user = await userService.createUser(req.body)
 
     user.isVerified = false
@@ -113,20 +119,33 @@ exports.verifyCode = async (req, res) => {
     if(user.codeAttempts > 3){
         return res.status(401).json({ message: "Too many attempts" })
     }
-
+/*
     if(user.verificationCode !== req.body.code){
         user.codeAttempts += 1
         await user.save()
         return res.status(401).json({ message: "Wrong verification code" })
     }
-
+*/
     userService.loginSuccess(user, req.session)
 
     res.status(200).json({ message: "Valid code" })
 }
 
 exports.session = async (req, res) => {
-    res.json({ user: req.session.user })
+    let isPending = false
+    if(req.session.pendingUserId){
+        isPending = true
+    }
+
+    let user = null
+    if(req.session.user){
+        user = req.session.user
+    }
+    
+    res.json({ 
+        user: user,
+        isPending: isPending
+     })
 }
 
 exports.myProfile = async (req, res) => {
@@ -148,4 +167,75 @@ exports.publicProfile = async (req, res) => {
         return res.status(404).json({ message: "User not found" })
     }
     res.json(user)
+}
+
+exports.resendCode = async (req, res) => {
+    const user = await userService.getUserById(req.session.pendingUserId)
+    await userService.generateCode(user)
+
+    try{
+        sendCode(user.email,user.verificationCode)
+    } catch(err) {
+        console.log(err)
+    }
+
+    res.json({ message: "Code sent" })
+}
+
+exports.joinBuilding = async (req, res) => {
+    if(req.session.user.building_id){
+        return res.status(401).json({ message: "User already belongs to a building" })
+    }
+
+    const user = await userService.joinBuilding(req.session.user.id,req.params.id)
+    if(!user){
+        return res.status(401).json({ message: "User couldn't join the building" })
+    }
+
+    req.session.user.building_id = user.building_id
+
+    res.json({ message: "Building joint" })
+}
+
+exports.updateBuildingRole = async (req, res) => {
+    const u = await userService.getUserById(req.params.id)
+    const creator = await userService.getUserById(req.session.user.id)
+    if(!u || !creator){
+        return res.status(404).json({ message: "User of building creator not found" })
+    }
+
+    if(!creator.building_id || u.building_id || creator.building_id != u.building_id){
+        return res.status(401).json({ message: "User and building creator are not in the same building" })
+    }
+
+    const building = await buildingService.getBuildingById(creator.building_id)
+
+    if(creator.id != building.creatorId){
+        return res.status(401).json({ message: "Only the creator of the building can change roles" })
+    }
+
+    const user = await userService.updateBuildingRole(req.params.id,req.body.building_role)
+    if(!user){
+        return res.status(404).json({ message: "User not found"} )
+    }
+
+    req.session.user.building_role = user.building_role
+
+    res.json({ message: "Role updated" })
+}
+
+exports.kickFromBuilding = async (req, res) => {
+    const user = await userService.kickFromBuilding(req.params.id)
+    if(!user){
+        return res.status(404).json({ message: "User not found" })
+    }
+    req.session.user.building_id = null
+    res.json({ message: "User kicked" })
+}
+
+exports.logOut = async (req, res) => {
+    req.session.destroy(err => {
+        if (err) return res.status(500).json({ message: "Error" });
+        res.json({ message: "Logged out" });
+    });
 }
