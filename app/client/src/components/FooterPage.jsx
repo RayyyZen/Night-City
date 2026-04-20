@@ -5,10 +5,10 @@ export default function FooterPage(){
     
         <footer className="footer">
                     
-                <ul class="list-inline">
+                <ul className="list-inline">
                     <Link className= "link" to="/about">About</Link>
                 </ul>
-                <p class="copyright">Night-Tower © 2026</p>
+                <p className="copyright">Night-Tower © 2026</p>
         </footer>
     )
 }

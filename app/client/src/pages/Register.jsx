@@ -6,7 +6,7 @@ import FooterPage from '../components/FooterPage.jsx';
 
 const API = 'http://localhost:3000'
 
-function Register({ onSuccess}) {
+function Register() {
 
     const navigate = useNavigate()
         
@@ -68,31 +68,12 @@ function Register({ onSuccess}) {
         }
     }
 
-    // Changement de pseudo
-    // délai de 500ms pour éviter le surplus de requêtes
-    useEffect(() => {
-        if (form.nickName.length < 3) {
-            setPseudoStatus('idle')
-            return
-        }
-        /*                                                  Route check-nickname
-        setPseudoStatus('checking')
-        const timer = setTimeout(() => {
-            fetch(`${API}/auth/check-pseudo?pseudo=${encodeURIComponent(form.pseudo)}`)     // vérifie si le pseudo est dispo
-            .then(r => r.json())
-            .then(data => setPseudoStatus(data.available ? 'available' : 'taken'))
-            .catch(() => setPseudoStatus('idle'))
-        }, 500)
-        */
-        return () => clearTimeout(timer)
-    }, [form.pseudo])
-
     // Validation champs
     const validate = () => {
         const newErrors = {}
         if (!form.email) {
             newErrors.email = 'Email manquant'
-        } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+        } else if (!/^\S+@\S+\.\S+$/.test(form.email) || !(!/[A-Z]/.test(form.email))) {
             newErrors.email = 'Format invalide (ex : ray123@gmail.com)'
         }
         if (!form.nickName) {
@@ -138,7 +119,7 @@ function Register({ onSuccess}) {
             } else if (month < 1 || month > 12) {
                 newErrors.birthdate = 'Le mois doit être compris entre 1 et 12'
             } else if (day < 1) {
-                e.birthdate = 'Le jour est invalide'
+                newErrors.birthdate = 'Le jour est invalide'
             } else {
                 const daysInMonth = {
                     1: 31, 2: null, 3: 31, 4: 30,       // null pour février
@@ -235,6 +216,33 @@ function Register({ onSuccess}) {
         <div className="center">
             <form className="form" onSubmit={handleSubmit}>
                 <h1 className="formName">Créer un compte</h1>
+                     {/* Photo de profil */}
+                    <label className="align">Photo de profil
+                        {imagePreview ? (
+                            <img
+                                src={imagePreview}
+                                alt="Aperçu"
+                                className="register-image"
+                            />
+                        ) : (
+                            // Placeholder si pas encore d'image
+                            <div className="image-placeholder">
+                            </div>
+                        )}
+                        <input 
+                            id="image"
+                            type="file"
+                            accept="image/"
+                            onChange={handleImageChange}
+                            className="input"
+                            style={{ padding: '8px' }}
+                        />
+                        {errors.image && <span className="register-error">{errors.image}</span>}
+                    </label>
+ 
+                    {serverError && (
+                        <div className="register-server-error">{serverError}</div>
+                    )}
                     {/* Email */}
                         <label className="align">Email
                             <input
@@ -244,7 +252,7 @@ function Register({ onSuccess}) {
                             value={form.email}
                             onChange={handleChange}
                             placeholder="exemple@gmail.com"
-                            className={`register-input ${errors.email ? 'register-input--error' : ''}`}
+                            className={`input ${errors.email ? 'input--error' : ''}`}
                         />
                         {errors.email && <span className="register-error">{errors.email}</span>}
  
@@ -257,6 +265,7 @@ function Register({ onSuccess}) {
                             name="firstName"
                             value={form.firstName}
                             onChange={handleChange}
+                            className={`input ${errors.firstName ? 'input--error' : ''}`}
                         />
                         {errors.firstName && <span className="register-error">{errors.firstName}</span>}
                     </label>
@@ -269,6 +278,7 @@ function Register({ onSuccess}) {
                             name="lastName"
                             value={form.lastName}
                             onChange={handleChange}
+                            className={`input ${errors.lastName ? 'input--error' : ''}`}
                         />
                         {errors.lastName && <span className="register-error">{errors.lastName}</span>}
                     </label>
@@ -284,9 +294,9 @@ function Register({ onSuccess}) {
                             name="nickName"
                             value={form.nickName}
                             onChange={handleChange}
-                            className={`register-input ${
-                                errors.nickName              ? 'register-input--error'  :
-                                pseudoStatus === 'available' ? 'register-input--valid'  : ''
+                            className={`input ${
+                                errors.nickName              ? 'input--error'  :
+                                pseudoStatus === 'available' ? 'input--valid'  : ''
                             }`}
                         />
                         {errors.nickName && <span className="register-error">{errors.nickName}</span>}
@@ -299,7 +309,7 @@ function Register({ onSuccess}) {
                             name="gender"
                             value={form.gender}
                             onChange={handleChange}
-                            className={`register-input ${errors.gender ? 'register-input--error' : ''}`}
+                            className={`input ${errors.gender ? 'input--error' : ''}`}
                         >
                             <option value="">-- Sélectionner --</option>
                             <option value="male">Homme</option>
@@ -318,7 +328,7 @@ function Register({ onSuccess}) {
                             onChange={handleChange}
                             min="1900-01-01"
                             max={`${new Date().getFullYear()}-12-31`}
-                            className={`register-input ${errors.birthdate ? 'register-input--error' : ''}`}
+                            className={`input ${errors.birthdate ? 'input--error' : ''}`}
                         />
                         {errors.birthdate && <span className="register-error">{errors.birthdate}</span>}
                     </label>
@@ -331,7 +341,7 @@ function Register({ onSuccess}) {
                             name="password"
                             value={form.password}
                             onChange={handleChange}
-                            className={`register-input ${errors.password ? 'register-input--error' : ''}`}
+                            className={`input ${errors.password ? 'input--error' : ''}`}
                         />
                         {errors.password && <span className="register-error">{errors.password}</span>}
                     </label>
@@ -344,61 +354,13 @@ function Register({ onSuccess}) {
                             name="confirmPassword"
                             value={form.confirmPassword}
                             onChange={handleChange}
-                            className={`register-input ${
-                                errors.confirmPassword ? 'register-input--error' :
-                                (form.confirmPassword && form.password === form.confirmPassword) ? 'register-input--valid' : ''
+                            className={`input ${
+                                errors.confirmPassword ? 'input--error' :
+                                (form.confirmPassword && form.password === form.confirmPassword) ? 'input--valid' : ''
                             }`}
                         />
                         {errors.confirmPassword && <span className="register-error">{errors.confirmPassword}</span>}
-                    </label>
-
-                    {/* Photo de profil */}
-                    <label className="align">Photo de profil
-                        {imagePreview ? (
-                            <img
-                                src={imagePreview}
-                                alt="Aperçu"
-                                style={{
-                                    width: '80px',
-                                    height: '80px',
-                                    borderRadius: '50%',
-                                    objectFit: 'cover',
-                                    marginBottom: '8px',
-                                    border: '2px solid var(--yellow)'
-                                }}
-                            />
-                        ) : (
-                            // Placeholder si pas encore d'image
-                            <div style={{
-                                width: '80px',
-                                height: '80px',
-                                borderRadius: '50%',
-                                background: 'var(--bg-header)',
-                                border: '2px dashed rgba(255,255,255,0.2)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'var(--text-soft)',
-                                fontSize: '24px',
-                                marginBottom: '8px'
-                            }}>
-                            </div>
-                        )}
-                        <input 
-                            id="image"
-                            type="file"
-                            accept="image/"
-                            onChange={handleImageChange}
-                            className="register-input"
-                            style={{ padding: '8px' }}
-                        />
-                        {errors.image && <span className="register-error">{errors.image}</span>}
-                    </label>
- 
-                    {serverError && (
-                        <div className="register-server-error">{serverError}</div>
-                    )}
- 
+                    </label> 
                     <button
                         type="submit"
                         className="submit-button"
