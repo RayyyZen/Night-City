@@ -65,7 +65,20 @@ exports.deleteUser = async (req, res) => {
 }
 
 exports.register = async (req, res) => {
+    const u1 = await userService.getUserByEmail(req.body.email)
+    if(u1){
+        return res.status(401).json({ message: "Email already used by another user" })
+    }
+
+    const u2 = await userService.getUserByNickName(req.body.nickName)
+    if(u2){
+        return res.status(401).json({ message: "Nick name already used by another user" })
+    }
+
     const user = await userService.createUser(req.body)
+    if(!user){
+        return res.status(401).json({ message: "User couldn't be created" })
+    }
 
     user.isVerified = false
     await userService.generateCode(user)

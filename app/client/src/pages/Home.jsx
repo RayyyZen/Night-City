@@ -53,7 +53,7 @@ export default function Home() {
 
       <main>
         <section className="center">
-          <h1 class="title">Welcome on Night-Tower</h1>
+          <h1 className="title">Welcome on Night-Tower</h1>
           <p>
             An intelligent platform to centralize information,
             services, and connected objects.

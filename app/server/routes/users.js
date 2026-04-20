@@ -14,6 +14,7 @@ const limiter = rateLimit({
   max: 50
 })
 
+router.post('/log-out', userMiddlewares.auth, userController.logOut)
 router.post('/register', limiter, userValidators.registerValidation, validate, userMiddlewares.isLogged, userController.register)
 router.post('/login', limiter, userValidators.loginValidation, validate, userMiddlewares.isLogged, userController.login)
 router.post('/verify-code', limiter, userValidators.codeValidation, validate, userMiddlewares.pendingUser, userController.verifyCode)
@@ -31,6 +32,5 @@ router.put('/update/:id', limiter, userMiddlewares.auth, userMiddlewares.isAdmin
 router.post('/join-building/:id', limiter, userMiddlewares.auth, userController.joinBuilding)
 router.post('/update-building-role/:id', limiter, userValidators.buildingRoleValidation, validate, userMiddlewares.auth, userController.updateBuildingRole)
 router.post('/kick/:id', limiter, userMiddlewares.auth, userController.kickFromBuilding)
-router.post('/log-out', userMiddlewares.auth, userController.logOut)
 
 module.exports = router
