@@ -106,8 +106,8 @@ export default function News() {
                 />
             </label>
 
-            <button type="button" onClick={() => navigate(`/profile/${news.author_id}`)}>Author</button>
-            <button type="button" onClick={() => navigate(`/building/${news.building_id}`)}>Building</button>
+            <button type="button" className="submit-button" onClick={() => navigate(`/profile/${news.author_id}`)}>Author</button>
+            <button type="button" className="submit-button" onClick={() => navigate(`/building/${news.building_id}`)}>Building</button>
         </form>
         </div>
         }

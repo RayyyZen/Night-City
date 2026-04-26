@@ -10,6 +10,7 @@ import Building from './pages/Building'
 import MyBuilding from './pages/MyBuilding'
 import CreateBuilding from './pages/CreateBuilding'
 import JoinBuilding from './pages/JoinBuilding'
+import About from './pages/About.jsx';
 
 import News from './pages/News'
 import AllNews from './pages/AllNews'
@@ -37,6 +38,7 @@ function App() {
       <Route path="/create-device" element={<CreateDevice />} />
       <Route path="/device/:id" element={<Device />} />
       <Route path="/publish-news" element={<PublishNews />} />
+      <Route path="/about" element={<About />} />
     </Routes>
   )
 }

@@ -228,14 +228,20 @@ function Register() {
                             <div className="image-placeholder">
                             </div>
                         )}
-                        <input 
-                            id="image"
-                            type="file"
-                            accept="image/"
-                            onChange={handleImageChange}
-                            className="input"
-                            style={{ padding: '8px' }}
-                        />
+
+                        <div className="file-upload-container">
+                            <input 
+                                id="image"
+                                type="file"
+                                accept="image/"
+                                onChange={handleImageChange}
+                                className="hidden-input"
+                            />
+                            
+                            <label htmlFor="image" className="custom-file-button">
+                                SÉLECTIONNER UNE IMAGE
+                            </label>
+                        </div>
                         {errors.image && <span className="register-error">{errors.image}</span>}
                     </label>
  

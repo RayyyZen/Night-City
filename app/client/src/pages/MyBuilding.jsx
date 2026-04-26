@@ -44,10 +44,30 @@ export default function MyBuilding() {
     }, [])
 
     const listUsers = users?.map(user => 
-        <div key={user.id} onClick={() => navigate(`/profile/${user.id}`)} >
-            <article className="card"> {user.nickName} </article>
-        </div>
-    )
+    <div key={user.id} onClick={() => navigate(`/profile/${user.id}`)}>
+        
+        
+        <article className="admin-user-card"> 
+            
+            <div className="user-info">
+                <span className="name">{user.nickName}</span>
+                <span className="role">{user.building_role}</span> 
+            </div>
+
+            <button 
+                className="kick-btn"
+                onClick={(e) => {
+                    e.stopPropagation(); 
+                    //kick user                    
+                }}
+            >
+                KICK
+            </button>
+
+        </article>
+
+    </div>
+)
 
     const listDevices = devices?.map(device => 
         <div key={device.id} onClick={() => navigate(`/device/${device.id}`)} >
@@ -70,18 +90,19 @@ export default function MyBuilding() {
             </div>
         }
 
-        <div className="card-container">
-            <div className="center title">Users</div>
+        <div className="center">
+            <div className="title">Users</div>
             {listUsers}
         </div>
 
-        <div className="card-container">
-            <div className="center title">Devices</div>
+        <div className="center">
+            <div className="title">Devices</div>
             {listDevices}
-            <button onClick={() => navigate('/create-device')}>Create new device</button>
+            <button className="submit-button" onClick={() => navigate('/create-device')}>Create new device</button>
+            <button className="submit-button" onClick={() => navigate('/publish-news')}>Publish news</button>
         </div>
 
-        <button onClick={() => navigate('/publish-news')}>Publish news</button>
+        
 
         { !loading && !building && <div>Building not found</div> }
 
