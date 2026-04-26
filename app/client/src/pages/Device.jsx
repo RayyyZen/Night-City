@@ -6,6 +6,8 @@ import { accessPages } from '../services/accessPages';
 import { useEffect } from "react";
 import { getDevice } from "../services/deviceService.js";
 import { useParams } from "react-router-dom";
+import { useRef } from "react"
+
 
 
 export default function Device() {
@@ -30,6 +32,8 @@ export default function Device() {
     const [device, setDevice] = useState(null)
     const [loading, setLoading] = useState(true)
 
+    const textareaRef = useRef(null)
+
     useEffect(() => {
         async function getDeviceHandler(id){
             const { device } = await getDevice(id)
@@ -40,6 +44,14 @@ export default function Device() {
         getDeviceHandler(id)
         
     }, [id])
+
+    useEffect(() => {
+        const el = textareaRef.current
+        if (el) {
+            el.style.height = "auto"
+            el.style.height = el.scrollHeight + "px"
+        }
+    }, [device])
 
     return (
 
@@ -69,6 +81,7 @@ export default function Device() {
             <label className="align">
                 Description
                 <textarea
+                ref={textareaRef}
                     disabled
                     required
                     className="input left"
