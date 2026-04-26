@@ -197,7 +197,6 @@ function Register() {
                 })
             })
             const data = await res.json()
-            console.log(data)
             if (!res.ok) {
                 setServerError(data.message)
                 return

@@ -16,8 +16,9 @@ const limiter = rateLimit({
 
 router.get('/mybuilding', userMiddlewares.auth, buildingController.getMyBuilding)
 router.get('/', buildingController.getAllBuildings)
-router.get('/:id', buildingController.getBuildingById)
+router.get('/:id', buildingController.getPublicBuildingById)
 router.post('/', limiter, buildingValidators.createValidation, validate, userMiddlewares.auth, buildingController.createBuilding)
+router.put('/', userMiddlewares.auth, userMiddlewares.isOwner, buildingController.updateBuilding)
 router.delete('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, buildingController.deleteBuilding)
 
 module.exports = router

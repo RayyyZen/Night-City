@@ -7,12 +7,12 @@ exports.registerValidation = [
     body('lastName').notEmpty(),
     body('nickName').notEmpty(),
     body('birthdate').notEmpty().isISO8601(),
-    body('email').isEmail(),
+    body('email').notEmpty().isEmail(),
     body('password').notEmpty()
 ]
 
 exports.loginValidation = [
-    body('email').isEmail(),
+    body('email').notEmpty().isEmail(),
     body('password').notEmpty()
 ]
 

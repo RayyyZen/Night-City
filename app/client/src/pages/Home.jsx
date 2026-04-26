@@ -58,7 +58,7 @@ export default function Home() {
             An intelligent platform to centralize information,
             services, and connected objects.
           </p>
-          <button class="submit-button"> Discover</button>
+          <button className="submit-button"> Discover</button>
         </section>
 
         <section className="center">
@@ -66,7 +66,7 @@ export default function Home() {
 
           <div className="search-bar">
             <input
-              class="input"
+              className="input"
               type="text"
               placeholder="Search news..."
               value={query}

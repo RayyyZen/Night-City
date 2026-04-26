@@ -1,41 +1,44 @@
 const mongoose = require('mongoose')
 
-const buildingSchema = new mongoose.Schema({
+const deviceSchema = new mongoose.Schema({
     id: {
         type: Number,
         required: true,
         unique: true,
         min: 0
     },
+    building_id: {
+        type: Number,
+        min: 0,
+        required: true
+    },
+    user_id: {
+        type: Number,
+        min: 0
+    },
     name: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     description: {
         type: String,
         required: true
     },
-    address: {
+    status: {
         type: String,
         required: true,
-        unique: true
+        default: "idle"
     },
-    area: {
+    energy: {
         type: Number,
         required: true,
         min: 0
     },
-    creatorId: {
-        type: Number,
+    installationDate: {
+        type: Date,
         required: true,
-        unique: true,
-        min: 0
-    },
-    password: {
-        type: String,
-        required: true
+        default: Date.now()
     }
 })
 
-module.exports = mongoose.model('Building', buildingSchema)
+module.exports = mongoose.model('Device', deviceSchema)

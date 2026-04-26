@@ -4,150 +4,137 @@ const Counter = require('../models/Counter')
 
 const bcrypt = require('bcrypt')
 
+const sendCode = require('../config/resend')
+
+const AppError = require('../errors/AppError')
+
 exports.getAllUsers = async () => {
-    try{
-        return await User.find()
-    } catch(err) {
-        console.error(err)
-        return null
+    return await User.find().select('-password')
+}
+
+exports.getUsersByBuildingId = async (building_id) => {
+    return await User.find({ building_id: building_id }).select('id building_role nickName level')
+}
+
+userNotFound = (user) => {
+    if(!user){
+        throw new AppError("User not found", 404)
     }
+}
+
+checkUser = (user) => {
+    userNotFound(user)
+    return user
 }
 
 exports.getUserById = async (id) => {
-    try{
-        return await User.findOne({ id: id })
-    } catch(err) {
-        console.error(err)
-        return null
-    }
+    const user = await User.findOne({ id: id })
+    return checkUser(user)
 }
 
 exports.getUserProfileById = async (id) => {
-    try{
-        return await User.findOne({ id: id }).select('id building_id firstName lastName nickName email role level points')
-    } catch(err) {
-        console.error(err)
-        return null
-    }
+    const user = await User.findOne({ id: id }).select('id building_id firstName lastName nickName email role level points')
+    return checkUser(user)
 }
 
 exports.getUserPublicProfileById = async (id) => {
-    try{
-        return await User.findOne({ id: id }).select('building_id nickName email role level')
-    } catch(err) {
-        console.error(err)
-        return null
-    }
+    const user = await User.findOne({ id: id }).select('building_id firstName lastName nickName email level')
+    return checkUser(user)
 }
 
 exports.createUser = async (data) => {
-    try{
-        
-        const counter = await Counter.findOneAndUpdate(
-        { name: "userLastId" },
-        { $inc: { value: 1 } },
-        { returnDocument: "after", upsert: true }
-        )
+    data.email = data.email.trim().toLowerCase()
 
-        if(!data || !data.password || !data.image || !data.gender || !data.firstName || !data.lastName || !data.nickName || !data.birthdate || !data.email){
-            throw new Error("The data fields are not complete to create the user")
-        }
-
-        const hashedPassword = await bcrypt.hash(data.password, 10)
-
-        return await User.create({
-            id: counter.value,
-            image: data.image,
-            gender: data.gender,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            nickName: data.nickName,
-            birthdate: data.birthdate,
-            email: data.email,
-            password: hashedPassword
-        })
-
-    } catch(err) {
-        console.error(err)
-        return null
+    const existingEmail = await User.findOne({ email: data.email })
+    if(existingEmail){
+        throw new AppError("The email is already used", 409)
     }
+
+    const existingNickName = await User.findOne({ nickName: data.nickName })
+    if(existingNickName){
+        throw new AppError("The nick name is already used", 409)
+    }
+
+    const counter = await Counter.findOneAndUpdate(
+    { name: "userLastId" },
+    { $inc: { value: 1 } },
+    { returnDocument: "after", upsert: true }
+    )
+
+    const hashedPassword = await bcrypt.hash(data.password, 10)
+
+    return await User.create({
+        id: counter.value,
+        image: data.image,
+        gender: data.gender,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        nickName: data.nickName,
+        birthdate: data.birthdate,
+        email: data.email,
+        password: hashedPassword
+    })
 }
 
-exports.updateUser = async (id, data) => {
+exports.updateUser = async (id, data, isAdmin) => {
+    const user = await User.findOne({ id: id })
+    userNotFound(user)
 
-    try{
-
-        const user = await User.findOne({ id: id })
-
-        if(data.image){
-            user.image = data.image
-        }
-
-        if(data.firstName){
-            user.firstName = data.firstName
-        }
-
-        if(data.lastName){
-            user.lastName = data.lastName
-        }
-
-        if(data.password){
-            user.password = await bcrypt.hash(data.password, 10)
-        }
-
-        await user.save()
-
-        return user
-
-    } catch(err) {
-        console.error(err)
-        return null
+    if(data.image){
+        user.image = data.image
     }
+
+    if(data.firstName){
+        user.firstName = data.firstName
+    }
+
+    if(data.lastName){
+        user.lastName = data.lastName
+    }
+
+    if(isAdmin && data.role){
+        user.role = data.role
+    }
+
+    if(data.password){
+        user.password = await bcrypt.hash(data.password, 10)
+    }
+
+    return await user.save()
 }
 
 exports.deleteUserById = async (id) => {
-    try{
-        return await User.findOneAndDelete({ id: id })
-    } catch(err) {
-        console.error(err)
-        return null
-    }
+    const user = await User.findOneAndDelete({ id: id })
+    return checkUser(user)
 }
 
-exports.getUserByNickName = async (nickName) => {
+exports.login = async (email, password) => {
+    const userEmail = email.trim().toLowerCase()
+    const user = await User.find({ email: userEmail })
+    userNotFound(user)
+
+    const checkPassword = await bcrypt.compare(password, user.password)
+
+    if(!checkPassword){
+        throw new AppError("Wrong password", 401)
+    }
+
+    await userService.generateCode(user)
+
+    req.session.pendingUserId = user.id
     try{
-        return await User.findOne({ nickName: nickName })
+        await sendCode(user.email, user.verificationCode)
     } catch(err) {
         console.error(err)
-        return null
     }
+
+    res.status(200).json({ message: "Code sent" })
 }
 
-exports.getUserByEmail = async (email) => {
-    try{
-        return await User.findOne({ email: email })
-    } catch(err) {
-        console.error(err)
-        return null
+exports.loginSuccess = async (user) => {
+    if(!user){
+        throw new Error("Can't finalize the user's login")
     }
-}
-
-exports.loginSuccess = async (user, session) => {
-    if(!user || !session){
-        throw new Error("Can't finalize the user's entry")
-    }
-
-    const building_id = !user.building_id ? null : user.building_id
-
-    session.user = {
-        id: user.id,
-        building_id: building_id,
-        nickName: user.nickName,
-        role: user.role,
-        level: user.level
-    }
-
-    session.pendingUserId = null
 
     user.isVerified = true
     user.verificationCode = null
@@ -176,50 +163,125 @@ exports.comparePassword = async (password, hashedPassword) => {
     return await bcrypt.compare(password,hashedPassword)
 }
 
-exports.generateCode = async (user) => {
+exports.generateAndSendCode = async (user) => {
     if(!user){
-        throw new Error("Can't generate a code of a non existing user")
+        throw new Error("Can't generate a code for a non existing user")
     }
+    user.isVerified = false
     user.verificationCode = Math.floor(100000 + Math.random() * 900000).toString()
     user.codeExpiresAt = Date.now() + 3 * 60 * 1000
     user.codeAttempts = 0
     await user.save()
+
+    await sendCode(user.email, user.verificationCode)
 }
 
-exports.joinBuilding = async (userId, buildingId) => {
-    try{
-        const building = await Building.findOne({ id: buildingId })
-        if(!building){
-            return null
+exports.verifyCode = async (pendingUserId, code) => {
+    const user = await userService.getUserById(pendingUserId)
+    userNotFound(user)
+
+    if(user.codeExpiresAt < Date.now()){
+        throw new AppError("Code expired", 401)
+    }
+
+    if(user.codeAttempts > 3){
+        throw new AppError("Too many attempts", 401)
+    }
+
+    if(user.verificationCode !== code){
+        user.codeAttempts += 1
+        await user.save()
+
+        throw new AppError("Wrong verification code", 401)
+    }
+
+    return user
+}
+
+exports.joinBuilding = async (userId, buildingId, password) => {
+    const building = await Building.findOne({ id: buildingId })
+    if(!building){
+        throw new AppError("You can't join a non existing building", 404)
+    }
+
+    const user = await User.findOne({ id: userId })
+    userNotFound(user)
+
+    if(user.building_id){
+        throw new AppError("You already are in a building", 401)
+    }
+
+    if(user.codeAttempts){
+        if(user.codeAttempts > 5){
+            throw new AppError("Too many attempts", 401)
         }
-
-        return await User.findOneAndUpdate({ id: userId }, {
-            building_id: buildingId,
-            building_role: "none"
-        }, { returnDocument: "after"})
-    } catch (err) {
-        console.error(err)
-        return null
+        user.codeAttempts++
     }
+    else{
+        user.codeAttempts = 0
+    }
+
+    if(!(await bcrypt.compare(password,building.password))){
+        throw new AppError("Wrong password", 401)
+    }
+
+    user.building_id = buildingId
+    user.building_role = "none"
+    user.codeAttempts = 0
+
+    return await user.save()
 }
 
-exports.updateBuildingRole = async (id, building_role) => {
-    try{
-        return await User.findOneAndUpdate({ id: id }, { building_role: building_role }, { returnDocument: "after"})
-    } catch (err) {
-        console.error(err)
-        return null
+exports.updateBuildingRole = async (userId, creatorId, building_role) => {
+    const user = await userService.getUserById(userId)
+    userNotFound(user)
+
+    const creator = await userService.getUserById(creatorId)
+    userNotFound(creator)
+
+    if(!creator.building_id || !user.building_id || creator.building_id != u.building_id){
+        throw new AppError("User and building creator are not in the same building", 401)
     }
+
+    const building = await Building.find({ id: creator.building_id })
+    if(!building){
+        throw new AppError("Building not found", 404)
+    }
+
+    if(creator.id != building.creatorId){
+        throw new AppError("Only the creator of the building can change roles", 401)
+    }
+
+    user.building_role = building_role
+
+    return await user.save()
 }
 
 exports.kickFromBuilding = async (id) => {
-    try{
-        return await User.findOneAndUpdate({ id: id }, {
-            $unset: { building_id: "" },
-            $unset: { building_role: "" }
-        })
-    } catch (err) {
-        console.error(err)
-        return null
+    const user = await User.findOne({ id: id })
+    userNotFound(user)
+
+    const building = await Building.find({ id: user.building_id })
+    if(!building){
+        throw new AppError("Building not found", 404)
     }
+
+    if(user.id == building.creatorId){
+        const newCreator = await User.findOne({ building_id: building.id, id: { $ne: user.id } })
+        if(!newCreator){
+            await building.deleteOne()
+        }
+        else {
+            building.creatorId = newCreator.id
+            await building.save()
+            
+            newCreator.building_role = "owner"
+            await newCreator.save()
+        }
+    }
+
+    user.set('building_id', undefined)
+    user.set('building_role', undefined)
+
+    return await user.save()
 }

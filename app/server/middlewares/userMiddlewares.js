@@ -25,3 +25,10 @@ exports.pendingUser = (req, res, next) => {
     }
     next()
 }
+
+exports.isOwner = (req, res, next) => {
+    if(!req.session.user.building_role || req.session.user.building_role !== "owner"){
+        return res.status(403).json({ message: "You are not the owner" })
+    }
+    next()
+}
