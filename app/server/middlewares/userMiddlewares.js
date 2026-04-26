@@ -32,3 +32,10 @@ exports.isOwner = (req, res, next) => {
     }
     next()
 }
+
+exports.hasBuilding = (req, res, next) => {
+    if(!req.session.user.building_id){
+        return res.status(403).json({ message: "You do not belong to any building yet" })
+    }
+    next()
+}

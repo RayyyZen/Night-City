@@ -55,9 +55,13 @@ exports.createDevice = async (id, userId) => {
     })
 }
 
-exports.updateDevice = async (id, data) => {
+exports.updateDevice = async (id, data, user) => {
     const device = await Device.findOne({ id: id })
     deviceNotFound(device)
+
+    if(device.building_id != user.building_id){
+        throw new AppError("You are not in the same building as the device", 401)
+    }
 
     if(data.name){
         device.name = data.name
@@ -83,8 +87,16 @@ setDevice = async (id, userId, status) => {
         throw new AppError("User not found", 404)
     }
 
+    if(!user.building_id || !user.building_role || !device.building_id || user.building_id != device.building_id){
+        throw new Error("The user and the device are not in the same building", 401)
+    }
+
     if(status != "idle" && status != "in_use" && status != "error"){
         throw new Error("You can only mark a device with one of these status : idle, in_use, error", 401)
+    }
+
+    if(status == "idle" && user.building_role != "owner" && user.id != device.user_id){
+        throw new AppError("You can't stop a device you didn't launch", 401)
     }
 
     device.status = status

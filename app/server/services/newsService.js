@@ -13,6 +13,10 @@ exports.getNewsByBuildingId = async (building_id) => {
     return await News.find({ building_id: building_id })
 }
 
+exports.getNewsByAuthorId = async (author_id) => {
+    return await News.find({ author_id: author_id })
+}
+
 newsNotFound = (news) => {
     if(!news){
         throw new AppError("News not found", 404)

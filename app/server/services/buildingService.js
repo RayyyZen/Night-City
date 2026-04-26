@@ -9,7 +9,7 @@ const deviceService = require('./deviceService')
 const AppError = require('../errors/AppError')
 
 exports.getAllBuildings = async () => {
-    return await Building.find().select('name')
+    return await Building.find().select('-password')
 }
 
 buildingNotFound = (building) => {
@@ -29,7 +29,7 @@ exports.getBuildingById = async (id) => {
 }
 
 exports.getPublicBuildingById = async (id) => {
-    const building = await Building.findOne({ id: id }).select('name description address area creatorId')
+    const building = await Building.findOne({ id: id }).select('id name description address area creatorId')
     return checkBuilding(building)
 }
 

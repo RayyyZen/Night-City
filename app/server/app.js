@@ -32,9 +32,13 @@ connectDB()
 
 const userRoutes = require('./routes/users')
 const buildingRoutes = require('./routes/buildings')
+const newsRoutes = require('./routes/news')
+const deviceRoutes = require('./routes/devices')
 
 app.use('/users', userRoutes)
 app.use('/buildings', buildingRoutes)
+app.use('/news', newsRoutes)
+app.use('/devices', deviceRoutes)
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`)
