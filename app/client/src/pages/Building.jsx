@@ -54,6 +54,7 @@ export default function Building() {
         { id && building &&
             <div className="center">
                 <h1 className="title"> {building.name} </h1>
+                <div> {building.description} </div>
                 <div> {building.address} </div>
                 <div> {building.area} </div>
 
