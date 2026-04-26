@@ -4,16 +4,16 @@ import HeaderPage from '../components/HeaderPage.jsx';
 import FooterPage from '../components/FooterPage.jsx';
 import { accessPages } from '../services/accessPages';
 import { useEffect } from "react";
-import { createBuilding } from "../services/buildingService.js";
+import { createDevice } from "../services/deviceService.js";
 
 
-export default function CreateBuilding() {
+export default function CreateDevice() {
 
     const navigate = useNavigate()
     
     useEffect(() => {
         async function checkPage(){
-            const { canAccessToPage } = await accessPages("create-building")
+            const { canAccessToPage } = await accessPages("create-device")
 
             if (!canAccessToPage) {
                 navigate("/home")
@@ -26,17 +26,14 @@ export default function CreateBuilding() {
 
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
-    const [address, setAddress] = useState('')
-    const [area, setArea] = useState('')
-    const [password, setPassword] = useState('')
+    const [energy, setEnergy] = useState('')
 
     const [error, setError] = useState('')
-    const [fieldType, setFieldType] = useState('password')
 
-    async function createBuildingHandler(e){
+    async function createDeviceHandler(e){
         e.preventDefault()
 
-        const { message, success } = await createBuilding(name, description, address, area, password)
+        const { message, success } = await createDevice(name, description, energy)
 
         if(success){
             navigate('/mybuilding')
@@ -50,12 +47,12 @@ export default function CreateBuilding() {
 
     <>
 
-    <HeaderPage page={"create-page"} />
+    <HeaderPage page={"create-device"} />
 
 
         <div className="center">
             
-            <form className="form" onSubmit={createBuildingHandler}>
+            <form className="form" onSubmit={createDeviceHandler}>
                 <h1 className='formName'>Create building</h1>
             <label className="align">
                 Name
@@ -82,60 +79,26 @@ export default function CreateBuilding() {
                     onChange={e => {
                         setDescription(e.target.value)
                         setError('')
-                        e.target.style.height = "auto"            // reset
+                        e.target.style.height = "auto"
                         e.target.style.height = e.target.scrollHeight + "px"
                     }}
                 ></textarea>
             </label>
 
             <label className="align">
-                Address
-                <input 
-                    required
-                    className="input"
-                    type="text"
-                    name="address"
-                    value={address}
-                    onChange={e => {
-                        setAddress(e.target.value)
-                        setError('')
-                    }}
-                />
-            </label>
-
-            <label className="align">
-                Area
+                Energy
                 <input 
                     required
                     className="input"
                     type="Number"
-                    name="area"
-                    value={area}
+                    name="energy"
+                    value={energy}
                     onChange={e => {
-                        setArea(e.target.value)
+                        setEnergy(e.target.value)
                         setError('')
                     }}
                 />
             </label>
-
-            <label className="align">
-                Password
-                <input 
-                    required
-                    className="input"
-                    type={fieldType}
-                    name="password"
-                    value={password}
-                    onChange={e => {
-                        setPassword(e.target.value)
-                        setError('')
-                    }}
-                />
-            </label>
-
-            { fieldType == "password" && <button type="button" className="input" onClick={() => { setFieldType("text") }}>Show</button> }
-
-            { fieldType == "text" && <button type="button" className="input" onClick={() => { setFieldType("password") }}>Hide</button> }
 
             <button className="submit-button" type="submit">
                 Submit

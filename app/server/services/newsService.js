@@ -17,23 +17,23 @@ exports.getNewsByAuthorId = async (author_id) => {
     return await News.find({ author_id: author_id })
 }
 
-newsNotFound = (news) => {
+const newsNotFound = (news) => {
     if(!news){
         throw new AppError("News not found", 404)
     }
 }
 
-checkNews = (news) => {
+const checkNews = (news) => {
     newsNotFound(news)
     return news
 }
 
-exports.getNewsById = (id) => {
+exports.getNewsById = async (id) => {
     const news = await News.findOne({ id: id })
     return checkNews(news)
 }
 
-exports.createNews = (id, userId) => {
+exports.createNews = async (data, userId) => {
     const user = await User.findOne({ id: userId })
     if(!user){
         throw new AppError("User not found", 404)
@@ -58,7 +58,7 @@ exports.createNews = (id, userId) => {
     })
 }
 
-exports.deleteNews = (id) => {
+exports.deleteNews = async (id) => {
     const news = await News.findOneAndDelete({ id: id })
     return checkNews(news)
 }

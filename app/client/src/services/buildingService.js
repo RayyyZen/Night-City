@@ -50,10 +50,16 @@ export async function getMyBuilding(){
         credentials: 'include'
     })
 
-    return await getResult(res)
+    const result = await getResult(res)
+
+    if(!result){
+        return { building: null, users: [], devices: [] }
+    }
+
+    return { building: result.building, users: result.users, devices: result.devices }
 }
 
-export async function createBuilding(name, address, area){
+export async function createBuilding(name, description, address, area, password){
 
     const res = await fetch('http://localhost:3000/buildings/', {
         method: 'POST',
@@ -63,8 +69,10 @@ export async function createBuilding(name, address, area){
         credentials: 'include',
         body: JSON.stringify({
             name: name,
+            description: description,
             address: address,
-            area: area
+            area: area,
+            password: password
         })
     })
 

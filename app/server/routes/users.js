@@ -26,7 +26,7 @@ router.get('/profile/:id', userMiddlewares.auth, userController.publicProfile)
 router.put('/update', limiter, userMiddlewares.auth, userController.updateProfile)
 router.put('/update/:id', limiter, userMiddlewares.auth, userMiddlewares.isAdmin, userController.updateUser)
 
-router.post('/join-building/:id', limiter, userMiddlewares.auth, userController.joinBuilding)
+router.post('/join-building/:id', limiter, userValidators.joinCodeValidation, validate, userMiddlewares.auth, userController.joinBuilding)
 router.post('/update-building-role/:id', limiter, userValidators.buildingRoleValidation, validate, userMiddlewares.auth, userController.updateBuildingRole)
 router.post('/kick/:id', limiter, userMiddlewares.auth, userController.kickFromBuilding)
 router.post('/leave', limiter, userMiddlewares.auth, userController.leaveBuilding)

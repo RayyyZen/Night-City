@@ -16,13 +16,13 @@ exports.getUsersByBuildingId = async (building_id) => {
     return await User.find({ building_id: building_id }).select('id building_role nickName level')
 }
 
-userNotFound = (user) => {
+const userNotFound = (user) => {
     if(!user){
         throw new AppError("User not found", 404)
     }
 }
 
-checkUser = (user) => {
+const checkUser = (user) => {
     userNotFound(user)
     return user
 }
@@ -110,7 +110,7 @@ exports.deleteUserById = async (id) => {
 
 exports.login = async (email, password) => {
     const userEmail = email.trim().toLowerCase()
-    const user = await User.find({ email: userEmail })
+    const user = await User.findOne({ email: userEmail })
     userNotFound(user)
 
     const checkPassword = await bcrypt.compare(password, user.password)
@@ -119,16 +119,7 @@ exports.login = async (email, password) => {
         throw new AppError("Wrong password", 401)
     }
 
-    await userService.generateCode(user)
-
-    req.session.pendingUserId = user.id
-    try{
-        await sendCode(user.email, user.verificationCode)
-    } catch(err) {
-        console.error(err)
-    }
-
-    res.status(200).json({ message: "Code sent" })
+    return user
 }
 
 exports.loginSuccess = async (user) => {
@@ -177,7 +168,7 @@ exports.generateAndSendCode = async (user) => {
 }
 
 exports.verifyCode = async (pendingUserId, code) => {
-    const user = await userService.getUserById(pendingUserId)
+    const user = await User.findOne({ id: pendingUserId })
     userNotFound(user)
 
     if(user.codeExpiresAt < Date.now()){
@@ -218,7 +209,7 @@ exports.joinBuilding = async (userId, buildingId, password) => {
         user.codeAttempts++
     }
     else{
-        user.codeAttempts = 0
+        user.codeAttempts = 1
     }
 
     if(!(await bcrypt.compare(password,building.password))){
@@ -233,17 +224,17 @@ exports.joinBuilding = async (userId, buildingId, password) => {
 }
 
 exports.updateBuildingRole = async (userId, creatorId, building_role) => {
-    const user = await userService.getUserById(userId)
+    const user = await User.findOne({ id: userId })
     userNotFound(user)
 
-    const creator = await userService.getUserById(creatorId)
+    const creator = await User.findOne({ id: creatorId })
     userNotFound(creator)
 
-    if(!creator.building_id || !user.building_id || creator.building_id != u.building_id){
+    if(!creator.building_id || !user.building_id || creator.building_id != user.building_id){
         throw new AppError("User and building creator are not in the same building", 401)
     }
 
-    const building = await Building.find({ id: creator.building_id })
+    const building = await Building.findOne({ id: creator.building_id })
     if(!building){
         throw new AppError("Building not found", 404)
     }
@@ -261,7 +252,7 @@ exports.kickFromBuilding = async (id) => {
     const user = await User.findOne({ id: id })
     userNotFound(user)
 
-    const building = await Building.find({ id: user.building_id })
+    const building = await Building.findOne({ id: user.building_id })
     if(!building){
         throw new AppError("Building not found", 404)
     }
@@ -274,7 +265,7 @@ exports.kickFromBuilding = async (id) => {
         else {
             building.creatorId = newCreator.id
             await building.save()
-            
+
             newCreator.building_role = "owner"
             await newCreator.save()
         }

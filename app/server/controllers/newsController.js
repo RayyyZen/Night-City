@@ -3,7 +3,7 @@ const userService = require('../services/userService')
 
 const AppError = require('../errors/AppError')
 
-errorHandler = (err, res) => {
+const errorHandler = (err, res) => {
     if(err instanceof AppError){
         return res.status(err.status).json({ message: err.message })
     }

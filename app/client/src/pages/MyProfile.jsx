@@ -2,16 +2,15 @@ import { useNavigate } from "react-router-dom";
 import HeaderPage from '../components/HeaderPage.jsx';
 import { accessPages } from '../services/accessPages';
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
 
 
-export default function Profile() {
+export default function MyProfile() {
 
     const navigate = useNavigate()
     
     useEffect(() => {
         async function checkPage(){
-            const { canAccessToPage } = await accessPages("profile")
+            const { canAccessToPage } = await accessPages("myprofile")
 
             if (!canAccessToPage) {
                 navigate("/home")
@@ -22,12 +21,10 @@ export default function Profile() {
         
     }, [navigate])
 
-    const { id } = useParams()
-
     return (
         <>
 
-            <HeaderPage page={"profile"} />
+            <HeaderPage page={"myprofile"} />
     
         </>
     )

@@ -1,19 +1,19 @@
 import { useState } from 'react'
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import HeaderPage from '../components/HeaderPage.jsx';
-import { submitCode, resendCode } from '../services/userService.js';
 import { accessPages } from '../services/accessPages';
+import { useEffect } from "react";
+import { joinBuilding } from '../services/userService.js';
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import FooterPage from '../components/FooterPage.jsx';
 
-
-export default function VerifyCode() {
+export default function JoinBuilding() {
 
     const navigate = useNavigate()
-    
+
     useEffect(() => {
         async function checkPage(){
-            const { canAccessToPage } = await accessPages("code")
+            const { canAccessToPage } = await accessPages("join-building")
 
             if (!canAccessToPage) {
                 navigate("/home")
@@ -24,54 +24,43 @@ export default function VerifyCode() {
         
     }, [navigate])
 
-    const [code, setCode] = useState('')
-    const [error, setError] = useState('')
+    const { id } = useParams()
 
-    async function submitCodeHandler(e){
+    const [error, setError] = useState('')
+    const [password, setPassword] = useState('')
+
+    async function joinBuildingHandler(e){
         e.preventDefault()
 
-        const { success, message } = await submitCode(code)
+        const { success, message } = await joinBuilding(id, password)
 
         if(success){
-            navigate('/myprofile')
+            navigate('/mybuilding')
         }
         else{
             setError(message)
         }
     }
 
-    async function resendCodeHandler(e){
-        e.preventDefault()
-
-        const { message } = await resendCode()
-
-        setError(message)
-        setCode("")
-    }
-
     return (
         <>
 
-        <HeaderPage page={"code"} />
+        <HeaderPage page={"join-building"} />
 
         <div className="center">
-        <form className="form" onSubmit={submitCodeHandler}>
-            <h1 className='formName'>Code</h1>
+        <form className="form" onSubmit={joinBuildingHandler}>
+            <h1 className='formName'>Building Password</h1>
             <label className="align">
                 <input 
                     className="input"
-                    name="verifyCode"
+                    name="verifyPassword"
                     type="text"
-                    value={code}
+                    value={password}
                     onChange = {e => {
-                        setCode(e.target.value)
+                        setPassword(e.target.value)
                     }}
                 />
             </label>
-
-            <button className="resend-button" type="button" onClick={resendCodeHandler}>
-                Resend the code
-            </button>
 
             <button className="submit-button" type="submit">
                 Submit

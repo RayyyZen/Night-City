@@ -35,9 +35,10 @@ export default function HeaderPage({ page }){
             <nav className="nav">
                 { page != "home" && <Link className ="link" to="/home">Home</Link> }
                 <Link className ="link" to="/buildings">Buildings</Link>
+                <Link className ="link" to="/all-news">News</Link>
                 { page != "login" && page != "register" && page != "code" && !user && <Link className ="link" to="/login">Sign-in</Link> }
                 { page != "login" && page != "register" && page != "code" && !user && <Link className ="link" to="/register">Sign-up</Link> }
-                { page != "profile" && page != "login" && page != "register" && page != "code" && user && <Link className ="link" to="/profile">Profile</Link> }
+                { page != "myprofile" && page != "login" && page != "register" && page != "code" && user && <Link className ="link" to="/myprofile">Profile</Link> }
                 { page != "mybuilding" && page != "login" && page != "register" && page != "code" && user && user.building_id && <Link className ="link" to="/mybuilding">My building</Link> }
                 { page != "create-building" && user && !user.building_id && <Link className ="link" to="/create-building">Create building</Link> }
                 { user && <button className ="link" onClick={logOutHandler}>Log-out</button> }

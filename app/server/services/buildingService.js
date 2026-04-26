@@ -12,13 +12,13 @@ exports.getAllBuildings = async () => {
     return await Building.find().select('-password')
 }
 
-buildingNotFound = (building) => {
+const buildingNotFound = (building) => {
     if(!building){
         throw new AppError("Building not found", 404)
     }
 }
 
-checkBuilding = (building) => {
+const checkBuilding = (building) => {
     buildingNotFound(building)
     return building
 }
@@ -51,35 +51,29 @@ exports.createBuilding = async (data, creatorId) => {
     { returnDocument: "after", upsert: true }
     )
 
-    const existingName = Building.findOne({ name: data.name })
+    const existingName = await Building.findOne({ name: data.name })
     if(existingName){
         throw new AppError("The building name is already used", 409)
     }
 
-    const existingAddress = Building.findOne({ address: data.address })
+    const existingAddress = await Building.findOne({ address: data.address })
     if(existingAddress){
         throw new AppError("The building address is already used", 409)
     }
 
-    const user = userService.getUserById(creatorId)
+    const user = await userService.getUserById(creatorId)
     if(user.building_id){
         throw new AppError("You already are in a building", 409)
     }
 
-    user.building_id = buildingId
-    user.building_role = "owner"
-    user.codeAttempts = 0
-
-    user.save()
-
-    const existingCreatorId = Building.findOne({ creatorId: data.creatorId })
+    const existingCreatorId = await Building.findOne({ creatorId: creatorId })
     if(existingCreatorId){
         throw new AppError("You already created a building", 409)
     }
 
-    hashedPassword = await bcrypt.hash(data.password, 10)
+    const hashedPassword = await bcrypt.hash(data.password, 10)
 
-    return await Building.create({
+    const building = await Building.create({
         id: counter.value,
         name: data.name,
         description: data.description,
@@ -88,10 +82,18 @@ exports.createBuilding = async (data, creatorId) => {
         creatorId: creatorId,
         password: hashedPassword
     })
+
+    user.building_id = building.id
+    user.building_role = "owner"
+    user.codeAttempts = 0
+
+    await user.save()
+
+    return building
 }
 
 exports.updateBuilding = async (id, data) => {
-    const building = Building.findOne({ id: id })
+    const building = await Building.findOne({ id: id })
     buildingNotFound(building)
 
     if(data.description){
@@ -99,7 +101,7 @@ exports.updateBuilding = async (id, data) => {
     }
 
     if(data.area){
-        building.description = data.description
+        building.area = data.area
     }
 
     if(data.password){

@@ -254,3 +254,18 @@ a{
   margin-bottom: 8px;
 }
 
+textarea {
+  resize: none;
+}
+
+.left {
+  text-align: left;
+}
+
+.autoHeight {
+  resize: none;          /* empêche le resize manuel */
+  overflow: hidden;      /* cache le scroll */
+  width: 100%;
+  min-height: 50px;      /* hauteur minimale */
+  box-sizing: border-box;
+}

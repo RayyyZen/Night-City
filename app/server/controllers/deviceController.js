@@ -3,7 +3,7 @@ const userService = require('../services/userService')
 
 const AppError = require('../errors/AppError')
 
-errorHandler = (err, res) => {
+const errorHandler = (err, res) => {
     if(err instanceof AppError){
         return res.status(err.status).json({ message: err.message })
     }
@@ -12,7 +12,7 @@ errorHandler = (err, res) => {
 }
 
 exports.getAllDevices = async (req, res) => {
-    const allDevices = await deviceService.getAllNews()
+    const allDevices = await deviceService.getAllDevices()
     res.json(allDevices)
 }
 
@@ -36,7 +36,7 @@ exports.getDeviceById = async (req, res) => {
 
 exports.createDevice = async (req, res) => {
     try{
-        const device = await deviceService.createDevice(req.body)
+        const device = await deviceService.createDevice(req.body, req.session.user.id)
         res.json(device)
 
     } catch(err) {

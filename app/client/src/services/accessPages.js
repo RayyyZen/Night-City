@@ -16,7 +16,7 @@ export async function accessPages(page){
             canAccessToPage = false
         }
     }
-    else if(page == "profile"){
+    else if(page == "myprofile"){
         if(!user){
             canAccessToPage = false
         }

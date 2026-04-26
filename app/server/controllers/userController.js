@@ -2,7 +2,7 @@ const userService = require('../services/userService')
 
 const AppError = require('../errors/AppError')
 
-errorHandler = (err, res) => {
+const errorHandler = (err, res) => {
     if(err instanceof AppError){
         return res.status(err.status).json({ message: err.message })
     }
@@ -35,7 +35,7 @@ exports.createUser = async (req, res) => {
     }
 }
 
-update = async (id, data, res, isAdmin) => {
+const update = async (id, data, res, isAdmin) => {
     try{
         const user = await userService.updateUser(id, data, isAdmin)
         res.json(user)
@@ -95,7 +95,7 @@ exports.verifyCode = async (req, res) => {
 
         await userService.loginSuccess(user)
 
-        session.user = {
+        req.session.user = {
             id: user.id,
             nickName: user.nickName,
             role: user.role,
@@ -103,10 +103,14 @@ exports.verifyCode = async (req, res) => {
         }
 
         if(user.building_id){
-            session.user.building_id = user.building_id
+            req.session.user.building_id = user.building_id
         }
 
-        session.pendingUserId = null
+        if(user.building_role){
+            req.session.user.building_role = user.building_role
+        }
+
+        req.session.pendingUserId = null
 
         res.status(200).json({ message: "Valid code" })
     
@@ -171,7 +175,7 @@ exports.resendCode = async (req, res) => {
 
 exports.joinBuilding = async (req, res) => {
     try{
-        const user = await userService.joinBuilding(req.session.user.id,req.params.id)
+        const user = await userService.joinBuilding(req.session.user.id, req.params.id, req.body.password)
 
         req.session.user.building_id = user.building_id
         res.status(200).json({ message: "Building joint" })

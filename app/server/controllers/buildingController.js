@@ -3,7 +3,7 @@ const userService = require('../services/userService')
 
 const AppError = require('../errors/AppError')
 
-errorHandler = (err, res) => {
+const errorHandler = (err, res) => {
     if(err instanceof AppError){
         return res.status(err.status).json({ message: err.message })
     }
@@ -38,7 +38,7 @@ exports.getPublicBuildingById = async (req, res) => {
 
 exports.getMyBuilding = async (req, res) => {
     try{
-        const { building, users, devices } = await buildingService.getMyBuildingById(req.session.user.id)
+        const { building, users, devices } = await buildingService.getMyBuildingById(req.session.user.building_id)
         res.json({
             building: building,
             users: users,

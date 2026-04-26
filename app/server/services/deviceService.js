@@ -13,23 +13,23 @@ exports.getDevicesByBuildingId = async (building_id) => {
     return await Device.find({ building_id: building_id })
 }
 
-deviceNotFound = (device) => {
+const deviceNotFound = (device) => {
     if(!device){
         throw new AppError("Device not found", 404)
     }
 }
 
-checkDevice = (device) => {
+const checkDevice = (device) => {
     deviceNotFound(device)
     return device
 }
 
 exports.getDeviceById = async (id) => {
-    const device = await Device.findById({ id: id })
+    const device = await Device.findOne({ id: id })
     return checkDevice(device)
 }
 
-exports.createDevice = async (id, userId) => {
+exports.createDevice = async (data, userId) => {
     const user = await User.findOne({ id: userId })
     if(!user){
         throw new AppError("User not found", 404)
@@ -87,7 +87,7 @@ setDevice = async (id, userId, status) => {
         throw new AppError("User not found", 404)
     }
 
-    if(!user.building_id || !user.building_role || !device.building_id || user.building_id != device.building_id){
+    if(!user.building_id || !device.building_id || user.building_id != device.building_id){
         throw new Error("The user and the device are not in the same building", 401)
     }
 

@@ -2,9 +2,10 @@ import { useState } from 'react'
 import HeaderPage from '../components/HeaderPage.jsx';
 import { useEffect } from "react";
 import { getBuilding } from '../services/buildingService.js';
-import { joinBuilding } from '../services/userService.js';
+import { session } from '../services/userService.js';
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import FooterPage from '../components/FooterPage.jsx';
 
 export default function Building() {
 
@@ -14,8 +15,9 @@ export default function Building() {
 
     const { id } = useParams()
 
-    const [error, setError] = useState('')
     const [building, setBuilding] = useState(null)
+
+    const [error, setError] = useState('')
 
     useEffect(() => {
         async function getBuildingHandler(id){
@@ -28,16 +30,19 @@ export default function Building() {
         
     }, [id])
 
-    async function joinBuildingHandler(e){
+    async function joinHandler(e){
         e.preventDefault()
 
-        const { success, message } = await joinBuilding(id)
+        const { user } = await session()
 
-        if(success){
-            navigate('/profile')
+        if(user && !user.building_id){
+            navigate('/join-building/' + id)
+        }
+        else if(!user){
+            navigate('/login')
         }
         else{
-            setError(message)
+            setError('You already belongs to a building')
         }
     }
 
@@ -52,12 +57,15 @@ export default function Building() {
                 <div> {building.address} </div>
                 <div> {building.area} </div>
 
-                <button className="submit-button" onClick={joinBuildingHandler}>Join</button>
-                { error && <div>{error}</div> }
+                <button className="submit-button" onClick={joinHandler}>Join</button>
+                {error && <div>{error}</div>}
             </div>
         }
 
         { !loading && (!id || !building) && <div>Building not found</div> }
+
+
+        <FooterPage/>
 
         </>
     )

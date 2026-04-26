@@ -85,14 +85,17 @@ export async function session(){
     }
 }
 
-export async function joinBuilding(id){
+export async function joinBuilding(id, password){
 
     const res = await fetch(`http://localhost:3000/users/join-building/${id}`, {
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json'
         },
-        credentials: 'include'
+        credentials: 'include',
+        body: JSON.stringify({
+            password: password
+        })
     })
 
     let message = null

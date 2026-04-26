@@ -23,3 +23,7 @@ exports.codeValidation = [
 exports.buildingRoleValidation = [
     body('building_role').notEmpty()
 ]
+
+exports.joinCodeValidation = [
+    body('password').notEmpty()
+]
