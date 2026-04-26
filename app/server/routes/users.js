@@ -21,7 +21,7 @@ router.post('/verify-code', limiter, userValidators.codeValidation, validate, us
 router.post('/resend-code', limiter, userMiddlewares.pendingUser, userController.resendCode)
 router.get('/session', userController.session)
 router.get('/profile', userMiddlewares.auth, userController.myProfile)
-router.get('/profile/:id', userMiddlewares.auth, userController.publicProfile)
+router.get('/profile/:id', userController.publicProfile)
 
 router.put('/update', limiter, userMiddlewares.auth, userController.updateProfile)
 router.put('/update/:id', limiter, userMiddlewares.auth, userMiddlewares.isAdmin, userController.updateUser)

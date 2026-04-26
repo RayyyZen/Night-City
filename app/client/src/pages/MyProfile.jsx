@@ -1,7 +1,11 @@
+import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import HeaderPage from '../components/HeaderPage.jsx';
 import { accessPages } from '../services/accessPages';
 import { useEffect } from "react";
+import FooterPage from '../components/FooterPage.jsx';
+import { getMyProfile } from '../services/userService';
+import { updateProfile } from '../services/userService';
 
 
 export default function MyProfile() {
@@ -21,11 +25,209 @@ export default function MyProfile() {
         
     }, [navigate])
 
-    return (
-        <>
+    const [user, setUser] = useState(null)
+    const [password, setPassword] = useState('123456789')
 
-            <HeaderPage page={"myprofile"} />
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+    //const [image, setImage] = useState('')
+
+    const [fieldType, setFieldType] = useState('password')
+
+    const [updatingPassword, setUpdatingPassword] = useState(false)
+    const [updatingFirstName, setUpdatingFirstName] = useState(false)
+    const [updatingLastName, setUpdatingLastName] = useState(false)
     
+    useEffect(() => {
+        async function getMyProfileHandler(){
+            const { user } = await getMyProfile()
+
+            setUser(user)
+
+            if(user){
+                setFirstName(user.firstName)
+                setLastName(user.lastName)
+                //setImage(user.image)
+            }
+            
+        }
+
+        getMyProfileHandler()
+        
+    }, [])
+
+    const [error, setError] = useState('')
+
+    async function submitUpdate(e){
+        e.preventDefault()
+
+        setUpdatingFirstName(false)
+        setUpdatingLastName(false)
+        setUpdatingPassword(false)
+        setPassword("123456789")
+
+        const data = {
+            firstName: firstName,
+            lastName: lastName
+        }
+        if(updatingPassword){
+            data.password = password
+        }
+        const { message, success } = await updateProfile(data)
+
+        if(!success){
+            setError(message)
+        }
+    }
+
+    return (
+
+    <>
+
+    <HeaderPage page={"myprofile"} />
+
+        {user && 
+
+        <div className="center">
+            
+            <form className="form" onSubmit={submitUpdate}>
+                <h1 className='formName'>My Profile</h1>
+            <label className="align">
+                First Name
+                <input 
+                    disabled={!updatingFirstName}
+                    className="input"
+                    type="text"
+                    name="firstName"
+                    value={firstName} 
+                    onChange={e => {
+                        setFirstName(e.target.value)
+                        setError('')
+                    }}
+                />
+                
+                <div className="buttons">
+                    { updatingFirstName && <button type="submit" className="input">Submit</button> }
+                    { !updatingFirstName && <button type="button" className="input" onClick={() => { if(!updatingLastName && !updatingPassword) setUpdatingFirstName(true) }}>Update</button> }
+                    { updatingFirstName && <button type="button" className="input" onClick={() => { setFirstName(user.firstName), setUpdatingFirstName(false) }}>Cancel</button> }
+                </div>
+            </label>
+
+            <label className="align">
+                Last Name
+                <input 
+                    disabled={!updatingLastName}
+                    className="input"
+                    type="text"
+                    name="lastName"
+                    value={lastName} 
+                    onChange={e => {
+                        setLastName(e.target.value)
+                        setError('')
+                    }}
+                />
+
+                <div className="buttons">
+                    { updatingLastName && <button type="submit" className="input">Submit</button> }
+                    { !updatingLastName && <button type="button" className="input" onClick={() => { if(!updatingFirstName && !updatingPassword) setUpdatingLastName(true) }}>Update</button> }
+                    { updatingLastName && <button type="button" className="input" onClick={() => { setLastName(user.lastName), setUpdatingLastName(false) }}>Cancel</button> }
+                </div>
+            </label>
+
+            <label className="align">
+                Nick Name
+                <input 
+                    disabled
+                    className="input"
+                    type="text"
+                    name="nickName"
+                    value={user.nickName} 
+                />
+            </label>
+
+            <label className="align">
+                Email
+                <input 
+                    disabled
+                    className="input"
+                    type="email"
+                    name="email"
+                    value={user.email} 
+                />
+            </label>
+
+            <label className="align">
+                Password
+                <input 
+                    disabled={!updatingPassword}
+                    className="input"
+                    type={fieldType}
+                    name="password"
+                    value={password}
+                    onChange={e => {
+                        setPassword(e.target.value)
+                        setError('')
+                    }}
+                />
+
+                <div className="buttons">
+                    { updatingPassword && <button type="submit" className="input">Submit</button> }
+                    { !updatingPassword && <button type="button" className="input" onClick={() => { if(!updatingFirstName && !updatingLastName) setUpdatingPassword(true) }}>Update</button> }
+                    { updatingPassword && <button type="button" className="input" onClick={() => { setPassword("123456789"), setUpdatingPassword(false) }}>Cancel</button> }
+                </div>
+
+
+                { updatingPassword && fieldType == "password" && <button type="button" className="input" onClick={() => { setFieldType("text") }}>Show</button> }
+
+                { updatingPassword && fieldType == "text" && <button type="button" className="input" onClick={() => { setFieldType("password") }}>Hide</button> }
+
+            </label>
+
+            <label className="align">
+                Role
+                <input 
+                    disabled
+                    className="input"
+                    type="text"
+                    name="role"
+                    value={user.role} 
+                />
+            </label>
+
+            <label className="align">
+                Level
+                <input 
+                    disabled
+                    className="input"
+                    type="text"
+                    name="level"
+                    value={user.level} 
+                />
+            </label>
+
+            <label className="align">
+                Points
+                <input 
+                    disabled
+                    className="input"
+                    type="Number"
+                    name="points"
+                    value={user.points} 
+                />
+            </label>
+
+            { user.building_id && <button type="button" className="submit-button" onClick={() => { navigate(`/building/${user.building_id}`) }}>Building</button> }
+
+            {error && <div>{error}</div>}
+        </form>
+        </div>
+
+}
+
+        
+    
+        <FooterPage/>
         </>
+        
     )
 }

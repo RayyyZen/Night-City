@@ -140,3 +140,88 @@ export async function logOut(){
         success: success
     }
 }
+
+export async function getMyProfile(){
+
+    const res = await fetch('http://localhost:3000/users/profile', {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    })
+
+    let user = null
+
+    if(res.ok){
+        try{
+            user = await res.json()
+            
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    return { user: user }
+}
+
+export async function getPublicProfile(id){
+
+    const res = await fetch(`http://localhost:3000/users/profile/${id}`, {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    })
+
+    let user = null
+
+    if(res.ok){
+        try{
+            user = await res.json()
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    return user
+}
+
+export async function updateProfile(data){
+
+    const res = await fetch('http://localhost:3000/users/update', {
+        method: 'PUT',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            ...(data.image && {image: data.image}),
+            ...(data.firstName && {firstName: data.firstName}),
+            ...(data.lastName && {lastName: data.lastName}),
+            ...(data.password && {password: data.password})
+        })
+    })
+
+    let message = null
+    let success = true
+
+    if(!res.ok){
+        success = false
+    }
+
+    try{
+        const data = await res.json()
+        message = data.message
+    } catch(err) {
+        message = "Server error"
+        success = false
+        console.log(err)
+    }
+
+    return {
+        success: success,
+        message: message
+    }
+}
