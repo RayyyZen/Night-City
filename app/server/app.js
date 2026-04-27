@@ -43,3 +43,21 @@ app.use('/devices', deviceRoutes)
 app.listen(port, () => {
     console.log(`App listening on port ${port}`)
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.use('/uploads', express.static('uploads'))

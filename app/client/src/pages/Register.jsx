@@ -49,24 +49,6 @@ export default function Register() {
         setServerError('')
     }
 
-    const handleImageChange = async (e) => {
-        const file = e.target.files[0]
-        if (!file) {
-            return
-        }
-        if (!file.type.startsWith('image/')) {
-            setErrors(prev => ({ ...prev, image : 'Le fichier doit être une image'}))
-            return
-        }
-        try {
-            const compressed = await compressImage(file)
-            setForm(prev => ({ ...prev, image: compressed}))
-            setImagePreview(compressed)
-            setErrors(prev => ({ ...prev, image: ''}))
-        } catch {
-            setErrors(prev => ({ ...prev, image: "Erreur lors du traitement de l'image." }))
-        }
-    }
 
     // Validation champs
     const validate = () => {
@@ -161,7 +143,13 @@ export default function Register() {
         return newErrors
     }
 
-    // Image user
+
+
+
+
+
+
+    /* Image user
     const compressImage = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader()
@@ -183,6 +171,48 @@ export default function Register() {
             reader.readAsDataURL(file)
         })
     }
+    */
+   const handleImageChange = async (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+
+        if (!file.type.startsWith('image/')) {
+            setErrors(prev => ({ ...prev, image: 'Le fichier doit être une image.' }))
+            return
+        }
+        const formData = new FormData()
+        formData.append('image', file) 
+        try {
+            const res = await fetch(`${API}/users/upload-image`, {
+                method: 'POST',
+                credentials: 'include',
+                body: formData
+            })
+
+            const data = await res.json()
+
+            if (!res.ok) {
+                setErrors(prev => ({ ...prev, image: data.message }))
+                return
+            }
+
+            setForm(prev => ({ ...prev, image: data.path }))
+            setImagePreview(URL.createObjectURL(file))
+            setErrors(prev => ({ ...prev, image: '' }))
+
+        } catch {
+            setErrors(prev => ({ ...prev, image: "Erreur lors de l'upload." }))
+        }
+    }
+
+
+
+
+
+
+
+
+
 
     // Soumission du formulaire
     const handleSubmit = async (e) => {
@@ -250,7 +280,7 @@ export default function Register() {
                             <input 
                                 id="image"
                                 type="file"
-                                accept="image/"
+                                accept="image/*"
                                 onChange={handleImageChange}
                                 className="hidden-input"
                             />

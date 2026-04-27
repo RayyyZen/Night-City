@@ -88,6 +88,14 @@ export default function Profile() {
             
             <form className="form" onSubmit={submitRoleUpdate}>
                 <h1 className='formName'>Profile</h1>
+                {user.image
+                    ? <img
+                        src={`http://localhost:3000/${user.image}`}
+                        alt="Photo de profil"
+                        className="register-image"
+                    />
+                    : <div className="image-placeholder"></div>
+                }
 
             <label className="align">
                 First Name

@@ -30,17 +30,32 @@ export default function MyProfile() {
 
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
-    //const [image, setImage] = useState('')
+    const [image, setImage] = useState('')
 
     const [oldFirstName, setOldFirstName] = useState('')
     const [oldLastName, setOldLastName] = useState('')
-    //const [oldImage, setOldImage] = useState('')
+    const [oldImage, setOldImage] = useState('')
 
     const [fieldType, setFieldType] = useState('password')
 
     const [updatingPassword, setUpdatingPassword] = useState(false)
     const [updatingFirstName, setUpdatingFirstName] = useState(false)
     const [updatingLastName, setUpdatingLastName] = useState(false)
+
+
+
+
+
+
+
+    const [updatingImage, setUpdatingImage] = useState(false)
+    const [imageFile, setImageFile] = useState(null)
+    const [imagePreview, setImagePreview] = useState(null)
+    const [imageError, setImageError] = useState('')
+
+
+
+
     
     useEffect(() => {
         async function getMyProfileHandler(){
@@ -51,11 +66,11 @@ export default function MyProfile() {
             if(user){
                 setFirstName(user.firstName)
                 setLastName(user.lastName)
-                //setImage(user.image)
+                setImage(user.image)
 
                 setOldFirstName(user.firstName)
                 setOldLastName(user.lastName)
-                //setOldImage(user.image)
+                setOldImage(user.image)
             }
             
         }
@@ -88,15 +103,61 @@ export default function MyProfile() {
 
             setFirstName(oldFirstName)
             setLastName(oldLastName)
-            //setImage(oldImage)
+            setImage(oldImage)
         }
         else{
             setOldFirstName(firstName)
             setOldLastName(lastName)
-            //setOldImage(image)
+            setOldImage(image)
         }
         setPassword("123456789")
     }
+
+
+
+
+
+
+
+    async function submitImageUpdate() {
+        if (!imageFile) return
+ 
+        const formData = new FormData()
+        formData.append('image', imageFile)
+ 
+        const uploadRes = await fetch('http://localhost:3000/users/upload-image', {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+        })
+        const uploadData = await uploadRes.json()
+ 
+        if (!uploadRes.ok) {
+            setImageError(uploadData.message || 'Upload failed')
+            return
+        }
+ 
+        const { success, message } = await updateProfile({ image: uploadData.path })
+ 
+        if (!success) {
+            setImageError(message)
+            return
+        }
+ 
+        setImage(uploadData.path)
+        setOldImage(uploadData.path)
+        setUser(prev => ({ ...prev, image: uploadData.path }))
+        setUpdatingImage(false)
+        setImageFile(null)
+        setImagePreview(null)
+        setImageError('')
+    }
+
+
+
+
+
+
 
     return (
 
@@ -110,6 +171,20 @@ export default function MyProfile() {
             
             <form className="form" onSubmit={submitUpdate}>
                 <h1 className='formName'>My Profile</h1>
+                {imagePreview
+                    ? <img src={imagePreview} alt="Photo de profil" className="register-image" />
+                    : user.image
+                        ? <img src={`http://localhost:3000/${user.image}`} alt="Photo de profil" className="register-image" />
+                        : <div className="image-placeholder"></div>
+                }
+ 
+                <div className="buttons">
+                    { !updatingImage && <button type="button" className="input" onClick={() => { if(!updatingFirstName && !updatingLastName && !updatingPassword) setUpdatingImage(true) }}>Update</button> }
+                    { updatingImage && <label className="custom-file-button">Choose file<input type="file" accept="image/*" className="hidden-input" onChange={e => { const f = e.target.files[0]; if(!f) return; setImageFile(f); setImagePreview(URL.createObjectURL(f)); setImageError('') }} /></label> }
+                    { updatingImage && imageFile && <button type="button" className="input" onClick={submitImageUpdate}>Submit</button> }
+                    { updatingImage && <button type="button" className="input" onClick={() => { setUpdatingImage(false); setImageFile(null); setImagePreview(null); setImageError('') }}>Cancel</button> }
+                </div>
+                { imageError && <div>{imageError}</div> }
             <label className="align">
                 First Name
                 <input 

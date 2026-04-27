@@ -7,6 +7,19 @@ const validate = require('../middlewares/validation')
 
 const userValidators = require('../validators/userValidators')
 
+
+
+
+
+
+const upload = require('../config/multer')
+
+
+
+
+
+
+
 const rateLimit = require('express-rate-limit')
 
 const limiter = rateLimit({
@@ -35,5 +48,18 @@ router.get('/', userMiddlewares.auth, userMiddlewares.isAdmin, userController.ge
 router.get('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, userController.getUserById)
 router.post('/', limiter, userValidators.registerValidation, validate, userMiddlewares.auth, userMiddlewares.isAdmin, userController.createUser)
 router.delete('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, userController.deleteUser)
+
+
+
+
+
+router.post('/upload-image', userMiddlewares.auth, upload.single('image'), (req, res) => {
+    if (!req.file) return res.status(400).json({ message: 'Aucun fichier reçu' })
+    res.json({ path: `uploads/${req.file.filename}` })
+})
+
+
+
+
 
 module.exports = router
