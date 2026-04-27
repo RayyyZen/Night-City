@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import HeaderPage from '../components/HeaderPage.jsx';
 import FooterPage from '../components/FooterPage.jsx';
 
 export default function Home() {
+  const navigate = useNavigate();
   const news = [
     {
       id: 1,
@@ -52,6 +54,10 @@ export default function Home() {
     <main>
       <section className="center">
         <h1 className="title">Welcome on Night-City</h1>
+        <div className="buttons">
+          <button className="submit-button" onClick={() => navigate('/all-news')}>News</button>
+          <button className="submit-button" onClick={() => navigate('/buildings')}>Buildings</button>
+        </div>
       </section>
     </main>
     <FooterPage/>
