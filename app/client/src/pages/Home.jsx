@@ -51,15 +51,15 @@ export default function Home() {
   return (
     <>
     <HeaderPage page={"home"} />
-    <main>
+    
       <section className="center">
-        <h1 className="title">Welcome on Night-City</h1>
+        <h1 className="big-title">Welcome in Night-City</h1>
         <div className="buttons">
           <button className="submit-button" onClick={() => navigate('/all-news')}>News</button>
           <button className="submit-button" onClick={() => navigate('/buildings')}>Buildings</button>
         </div>
       </section>
-    </main>
+     
     <FooterPage/>
     </>
   );

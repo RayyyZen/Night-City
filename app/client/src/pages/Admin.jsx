@@ -47,11 +47,11 @@ export default function Admin() {
     }
 
     const listUsers = filteredUsers.map((user) => (
-        <div key={user.id}>
-            <article className="card" onClick={() => navigate(`/profile/${user.id}`)}>
+        <div className="admin-user-card" key={user.id}>
+            <article className="user-info" onClick={() => navigate(`/profile/${user.id}`)}>
                 {highlight(user.nickName)} [{user.role}]
             </article>
-            <button type="button" onClick={(e) => deleteHandler(e, user.id)}>Delete</button>
+            <button className="kick-btn" type="button" onClick={(e) => deleteHandler(e, user.id)}>Delete</button>
         </div>
     ))
 
