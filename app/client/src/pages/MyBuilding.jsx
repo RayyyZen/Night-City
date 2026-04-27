@@ -215,10 +215,10 @@ export default function MyBuilding() {
         <div className="card" key={device.id}>
             <article onClick={() => navigate(`/device/${device.id}`) }> {device.name} [{device.status}] </article>
             <div className="buttons">
-            {device.status == "idle" && <button type="button" onClick={(e) => deviceUseHandler(e,device.id) }>Use</button> }
-            {device.status == "in_use" && (device.user_id == user.id || user.building_role == "owner") && <button type="button" onClick={(e) => deviceIdleHandler(e,device.id) }>Can</button> }
-            {device.status == "error" && user.building_role == "owner"  && <button type="button" onClick={(e) => deviceIdleHandler(e,device.id) }>Act</button> }
-            {device.status != "error" && user.building_role == "owner" && <button type="button" onClick={(e) => deviceErrorHandler(e,device.id) }>Err</button> }
+            {device.status == "idle" && <button className="submit-button" type="button" onClick={(e) => deviceUseHandler(e,device.id) }>Use</button> }
+            {device.status == "in_use" && (device.user_id == user.id || user.building_role == "owner") && <button className="submit-button" type="button" onClick={(e) => deviceIdleHandler(e,device.id) }>Can</button> }
+            {device.status == "error" && user.building_role == "owner"  && <button className="submit-button" type="button" onClick={(e) => deviceIdleHandler(e,device.id) }>Act</button> }
+            {device.status != "error" && user.building_role == "owner" && <button className="submit-button" type="button" onClick={(e) => deviceErrorHandler(e,device.id) }>Err</button> }
             </div>
         </div>
     )

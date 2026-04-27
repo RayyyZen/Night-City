@@ -183,11 +183,11 @@ a{
 }
 
 .card-container{
-  margin: 30px;
+  margin: 10px auto;
   display: flex; 
   flex-direction: column;
   gap : 20px;
-  cursor : pointer;
+  max-width: 1000px;
 }
 
 .card:hover{
@@ -200,7 +200,7 @@ a{
   border-radius : 10px;
   transition: all 0.3s ease-in-out;
   padding : 10px;
-
+  cursor : pointer;
 }
 
 
