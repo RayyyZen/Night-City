@@ -30,6 +30,14 @@ export default function MyBuilding() {
         }
 
         checkPage()
+
+        const intervalId = setInterval(() => {
+            checkPage()
+        }, 3000)
+
+        return () => {
+            clearInterval(intervalId)
+        }
         
     }, [navigate])
 
@@ -70,6 +78,15 @@ export default function MyBuilding() {
         }
 
         getMyBuildingHandler()
+
+
+        const intervalId2 = setInterval(() => {
+            getMyBuildingHandler()
+        }, 3000)
+
+        return () => {
+            clearInterval(intervalId2)
+        }
         
     }, [])
 
@@ -197,10 +214,12 @@ export default function MyBuilding() {
     const listDevices = devices?.map(device => 
         <div className="card" key={device.id}>
             <article onClick={() => navigate(`/device/${device.id}`) }> {device.name} [{device.status}] </article>
+            <div className="buttons">
             {device.status == "idle" && <button type="button" onClick={(e) => deviceUseHandler(e,device.id) }>Use</button> }
             {device.status == "in_use" && (device.user_id == user.id || user.building_role == "owner") && <button type="button" onClick={(e) => deviceIdleHandler(e,device.id) }>Can</button> }
             {device.status == "error" && user.building_role == "owner"  && <button type="button" onClick={(e) => deviceIdleHandler(e,device.id) }>Act</button> }
             {device.status != "error" && user.building_role == "owner" && <button type="button" onClick={(e) => deviceErrorHandler(e,device.id) }>Err</button> }
+            </div>
         </div>
     )
 
@@ -341,7 +360,7 @@ export default function MyBuilding() {
 
                     <div className="center">
                         <div className="title">Devices</div>
-                        {listDevices}
+                        <div className="card-container">{listDevices}</div> 
                         { user && user.building_role && user.building_role == "owner" && <button className="submit-button" onClick={() => navigate('/create-device')}>Create new device</button> }
                         <button className="submit-button" onClick={() => navigate('/publish-news')}>Publish news</button>
                     </div>

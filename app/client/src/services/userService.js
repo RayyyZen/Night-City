@@ -324,3 +324,59 @@ export async function updateRole(id, building_role){
         message: message
     }
 }
+
+export async function getAllUsers(){
+
+    const res = await fetch('http://localhost:3000/users/', {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    })
+
+    let users = []
+
+    if(res.ok){
+        try{
+            users = await res.json()
+            
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    return users
+}
+
+export async function deleteUser(id){
+
+    const res = await fetch(`http://localhost:3000/users/${id}`, {
+        method: 'DELETE',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    })
+
+    let message = null
+    let success = true
+
+    if(!res.ok){
+        success = false
+    }
+
+    try{
+        const data = await res.json()
+        message = data.message
+    } catch(err) {
+        message = "Server error"
+        success = false
+        console.log(err)
+    }
+
+    return {
+        success: success,
+        message: message
+    }
+}

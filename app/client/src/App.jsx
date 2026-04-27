@@ -17,6 +17,7 @@ import AllNews from './pages/AllNews'
 import CreateDevice from './pages/CreateDevice'
 import Device from './pages/Device'
 import PublishNews from './pages/PublishNews'
+import Admin from './pages/Admin'
 
 function App() {
   return (
@@ -39,6 +40,8 @@ function App() {
       <Route path="/device/:id" element={<Device />} />
       <Route path="/publish-news" element={<PublishNews />} />
       <Route path="/about" element={<About />} />
+
+      <Route path="/admin" element={<Admin />} />
     </Routes>
   )
 }
