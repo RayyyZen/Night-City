@@ -6,7 +6,7 @@ import FooterPage from '../components/FooterPage.jsx';
 
 const API = 'http://localhost:3000'
 
-function Register() {
+export default function Register() {
 
     const navigate = useNavigate()
         
@@ -121,24 +121,41 @@ function Register() {
             } else if (day < 1) {
                 newErrors.birthdate = 'Le jour est invalide'
             } else {
-                const daysInMonth = {
-                    1: 31, 2: null, 3: 31, 4: 30,       // null pour février
-                    5: 31, 6: 30,  7: 31, 8: 31,
-                    9: 30, 10: 31, 11: 30, 12: 31
-                }
-                // vérification année bissextile
-                const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)
-                daysInMonth[2] = isLeapYear ? 29 : 28
-                const maxDay = daysInMonth[month]
-                if (day > maxDay) {
-                    if (month === 2) {
-                        newErrors.birthdate = isLeapYear
-                            ? 'Février a au maximum 29 jours (année bissextile)'
-                            : 'Février a au maximum 28 jours'
-                    } else {
-                        newErrors.birthdate = 'Ce mois a au maximum ${maxDay} jours'
+                    const daysInMonth = {
+                        1: 31, 2: null, 3: 31, 4: 30,
+                        5: 31, 6: 30, 7: 31, 8: 31,
+                        9: 30, 10: 31, 11: 30, 12: 31
                     }
-                }
+                    const today = new Date()
+
+                    const isLeapYear =
+                        (year % 4 === 0 && year % 100 !== 0) ||
+                        (year % 400 === 0)
+
+                    daysInMonth[2] = isLeapYear ? 29 : 28
+                    const maxDay = daysInMonth[month]
+
+                    if (day > maxDay) {
+                        if (month === 2) {
+                            newErrors.birthdate = isLeapYear
+                                ? 'Février a au maximum 29 jours (année bissextile)'
+                                : 'Février a au maximum 28 jours'
+                        } else {
+                            newErrors.birthdate = `Ce mois a au maximum ${maxDay} jours`
+                        }
+                    } else {
+                        let age = today.getFullYear() - year
+                        const monthDiff = today.getMonth() + 1 - month
+                        const dayDiff = today.getDate() - day
+
+                        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                            age--
+                        }
+
+                        if (age < 12) {
+                            newErrors.birthdate = 'Il faut avoir au moins 12 ans pour créer un compte'
+                        }
+                    }
             }
         }
         return newErrors
@@ -330,7 +347,11 @@ function Register() {
                             value={form.birthdate}
                             onChange={handleChange}
                             min="1900-01-01"
-                            max={`${new Date().getFullYear()}-12-31`}
+                            max={new Date(
+                                new Date().getFullYear() - 12,
+                                new Date().getMonth(),
+                                new Date().getDate()
+                            ).toISOString().split('T')[0]}
                             className={`input ${errors.birthdate ? 'input--error' : ''}`}
                         />
                         {errors.birthdate && <span className="register-error">{errors.birthdate}</span>}
@@ -388,5 +409,3 @@ function Register() {
     </>
     )
 }
-
-export default Register
