@@ -49,14 +49,11 @@ export default function Home() {
   return (
     <>
     <HeaderPage page={"home"} />
-    <div className="home-page">
-
-      <main>
-        <section className="center">
-          <h1 className="title">Welcome on Night-City</h1>
-        </section>
-      </main>
-    </div>
+    <main>
+      <section className="center">
+        <h1 className="title">Welcome on Night-City</h1>
+      </section>
+    </main>
     <FooterPage/>
     </>
   );
