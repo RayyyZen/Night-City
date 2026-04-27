@@ -225,3 +225,102 @@ export async function updateProfile(data){
         message: message
     }
 }
+
+export async function kick(id){
+
+    const res = await fetch(`http://localhost:3000/users/kick/${id}`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    })
+
+    let message = null
+    let success = true
+
+    if(!res.ok){
+        success = false
+    }
+
+    try{
+        const data = await res.json()
+        message = data.message
+    } catch(err) {
+        message = "Server error"
+        success = false
+        console.log(err)
+    }
+
+    return {
+        success: success,
+        message: message
+    }
+}
+
+export async function leave(){
+
+    const res = await fetch(`http://localhost:3000/users/leave`, {
+        method: 'POST',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    })
+
+    let message = null
+    let success = true
+
+    if(!res.ok){
+        success = false
+    }
+
+    try{
+        const data = await res.json()
+        message = data.message
+    } catch(err) {
+        message = "Server error"
+        success = false
+        console.log(err)
+    }
+
+    return {
+        success: success,
+        message: message
+    }
+}
+
+export async function updateRole(id, building_role){
+
+    const res = await fetch(`http://localhost:3000/users/update-building-role/${id}`, {
+        method: 'PUT',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            building_role: building_role
+        })
+    })
+
+    let message = null
+    let success = true
+
+    if(!res.ok){
+        success = false
+    }
+
+    try{
+        const data = await res.json()
+        message = data.message
+    } catch(err) {
+        message = "Server error"
+        success = false
+        console.log(err)
+    }
+
+    return {
+        success: success,
+        message: message
+    }
+}

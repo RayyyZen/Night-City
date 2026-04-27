@@ -55,6 +55,7 @@ exports.createBuilding = async (req, res) => {
         const building = await buildingService.createBuilding(req.body,req.session.user.id)
         
         req.session.user.building_id = building.id
+        req.session.user.building_role = "owner"
         res.status(201).json(building)
     
     } catch(err) {

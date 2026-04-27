@@ -32,6 +32,10 @@ export default function MyProfile() {
     const [lastName, setLastName] = useState('')
     //const [image, setImage] = useState('')
 
+    const [oldFirstName, setOldFirstName] = useState('')
+    const [oldLastName, setOldLastName] = useState('')
+    //const [oldImage, setOldImage] = useState('')
+
     const [fieldType, setFieldType] = useState('password')
 
     const [updatingPassword, setUpdatingPassword] = useState(false)
@@ -48,6 +52,10 @@ export default function MyProfile() {
                 setFirstName(user.firstName)
                 setLastName(user.lastName)
                 //setImage(user.image)
+
+                setOldFirstName(user.firstName)
+                setOldLastName(user.lastName)
+                //setOldImage(user.image)
             }
             
         }
@@ -64,7 +72,6 @@ export default function MyProfile() {
         setUpdatingFirstName(false)
         setUpdatingLastName(false)
         setUpdatingPassword(false)
-        setPassword("123456789")
 
         const data = {
             firstName: firstName,
@@ -73,11 +80,22 @@ export default function MyProfile() {
         if(updatingPassword){
             data.password = password
         }
+        
         const { message, success } = await updateProfile(data)
 
         if(!success){
             setError(message)
+
+            setFirstName(oldFirstName)
+            setLastName(oldLastName)
+            //setImage(oldImage)
         }
+        else{
+            setOldFirstName(firstName)
+            setOldLastName(lastName)
+            //setOldImage(image)
+        }
+        setPassword("123456789")
     }
 
     return (
@@ -109,7 +127,7 @@ export default function MyProfile() {
                 <div className="buttons">
                     { updatingFirstName && <button type="submit" className="input">Submit</button> }
                     { !updatingFirstName && <button type="button" className="input" onClick={() => { if(!updatingLastName && !updatingPassword) setUpdatingFirstName(true) }}>Update</button> }
-                    { updatingFirstName && <button type="button" className="input" onClick={() => { setFirstName(user.firstName), setUpdatingFirstName(false) }}>Cancel</button> }
+                    { updatingFirstName && <button type="button" className="input" onClick={() => { setFirstName(oldFirstName), setUpdatingFirstName(false) }}>Cancel</button> }
                 </div>
             </label>
 
@@ -130,7 +148,7 @@ export default function MyProfile() {
                 <div className="buttons">
                     { updatingLastName && <button type="submit" className="input">Submit</button> }
                     { !updatingLastName && <button type="button" className="input" onClick={() => { if(!updatingFirstName && !updatingPassword) setUpdatingLastName(true) }}>Update</button> }
-                    { updatingLastName && <button type="button" className="input" onClick={() => { setLastName(user.lastName), setUpdatingLastName(false) }}>Cancel</button> }
+                    { updatingLastName && <button type="button" className="input" onClick={() => { setLastName(oldLastName), setUpdatingLastName(false) }}>Cancel</button> }
                 </div>
             </label>
 
@@ -216,7 +234,7 @@ export default function MyProfile() {
                 />
             </label>
 
-            { user.building_id && <button type="button" className="submit-button" onClick={() => { navigate(`/building/${user.building_id}`) }}>Building</button> }
+            { user.building_id && <button type="button" className="submit-button" onClick={() => { navigate('/mybuilding') }}>Building</button> }
 
             {error && <div>{error}</div>}
         </form>

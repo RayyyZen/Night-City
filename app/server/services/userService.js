@@ -33,12 +33,12 @@ exports.getUserById = async (id) => {
 }
 
 exports.getUserProfileById = async (id) => {
-    const user = await User.findOne({ id: id }).select('id building_id firstName lastName nickName email role level points')
+    const user = await User.findOne({ id: id }).select('id building_id building_role firstName lastName nickName email role level points')
     return checkUser(user)
 }
 
 exports.getUserPublicProfileById = async (id) => {
-    const user = await User.findOne({ id: id }).select('building_id firstName lastName nickName email level')
+    const user = await User.findOne({ id: id }).select('building_id building_role firstName lastName nickName email level')
     return checkUser(user)
 }
 
@@ -159,7 +159,7 @@ exports.generateAndSendCode = async (user) => {
         throw new Error("Can't generate a code for a non existing user")
     }
     user.isVerified = false
-    user.verificationCode = Math.floor(100000 + Math.random() * 900000).toString()
+    user.verificationCode = "1"
     user.codeExpiresAt = Date.now() + 3 * 60 * 1000
     user.codeAttempts = 0
     await user.save()

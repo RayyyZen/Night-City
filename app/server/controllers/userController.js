@@ -119,7 +119,35 @@ exports.verifyCode = async (req, res) => {
     }
 }
 
+const updateSession = async (req, res) => {
+    if(req.session.user && req.session.user.id){
+        try{
+            const user = await userService.getUserById(Number(req.session.user.id))
+            if(user){
+                if(user.building_id){
+                    req.session.user.building_id = user.building_id
+                    req.session.user.building_role = user.building_role
+                }
+                else{
+                    if(req.session.user.building_id){
+                        delete req.session.user.building_id
+                    }
+                    if(req.session.user.building_role){
+                        delete req.session.user.building_role
+                    }
+                }
+            }
+        } catch(err){
+            console.error(err)
+            return
+        }
+    }
+}
+
 exports.session = async (req, res) => {
+
+    await updateSession(req, res)
+
     let isPending = false
     if(req.session.pendingUserId){
         isPending = true

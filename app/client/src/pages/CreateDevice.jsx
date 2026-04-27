@@ -53,7 +53,7 @@ export default function CreateDevice() {
         <div className="center">
             
             <form className="form" onSubmit={createDeviceHandler}>
-                <h1 className='formName'>Create building</h1>
+                <h1 className='formName'>Create device</h1>
             <label className="align">
                 Name
                 <input 

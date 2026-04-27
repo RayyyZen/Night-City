@@ -20,9 +20,9 @@ router.get('/:id', userMiddlewares.auth, userMiddlewares.hasBuilding, deviceCont
 router.post('/', limiter, deviceValidators.createDeviceValidation, validate, userMiddlewares.auth, userMiddlewares.isOwner, deviceController.createDevice)
 router.put('/:id', userMiddlewares.auth, userMiddlewares.isOwner, deviceController.updateDevice)
 
-router.post('/idle', userMiddlewares.auth, deviceController.setDeviceIdle)
-router.post('/in_use', userMiddlewares.auth, deviceController.setDeviceUse)
-router.post('/error', userMiddlewares.auth, userMiddlewares.isOwner, deviceController.setDeviceError)
+router.post('/idle/:id', userMiddlewares.auth, deviceController.setDeviceIdle)
+router.post('/in_use/:id', userMiddlewares.auth, deviceController.setDeviceUse)
+router.post('/error/:id', userMiddlewares.auth, userMiddlewares.isOwner, deviceController.setDeviceError)
 
 router.delete('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, deviceController.deleteDevice)
 

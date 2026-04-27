@@ -97,3 +97,39 @@ export async function createBuilding(name, description, address, area, password)
         success: success
     }
 }
+
+export async function updateBuilding(data){
+
+    const res = await fetch(`http://localhost:3000/buildings`, {
+        method: 'PUT',
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+            ...(data.description && {description: data.description}),
+            ...(data.password && {password: data.password})
+        })
+    })
+
+    let message = null
+    let success = true
+
+    if(!res.ok){
+        success = false
+    }
+
+    try{
+        const data = await res.json()
+        message = data.message
+    } catch(err) {
+        message = "Server error"
+        success = false
+        console.log(err)
+    }
+
+    return {
+        success: success,
+        message: message
+    }
+}

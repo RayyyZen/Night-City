@@ -5,20 +5,24 @@ import HeaderPage from '../components/HeaderPage.jsx';
 import { accessPages } from '../services/accessPages';
 import { useEffect } from "react";
 import FooterPage from '../components/FooterPage.jsx';
-import { getPublicProfile } from '../services/userService';
+import { getPublicProfile, updateRole } from '../services/userService';
 
 
 export default function Profile() {
 
     const navigate = useNavigate()
+
+    const [sessionUser, setSessionUser] = useState(null)
     
     useEffect(() => {
         async function checkPage(){
-            const { canAccessToPage } = await accessPages("profile")
+            const { user, canAccessToPage } = await accessPages("profile")
 
             if (!canAccessToPage) {
                 navigate("/home")
             }
+
+            setSessionUser(user)
         }
 
         checkPage()
@@ -28,16 +32,49 @@ export default function Profile() {
     const { id } = useParams()
 
     const [user, setUser] = useState(null)
+
+    const [buildingRole, setBuildingRole] = useState('')
+    const [oldBuildingRole, setOldBuildingRole] = useState('')
     
     useEffect(() => {
         async function getMyProfileHandler(id){
             const user = await getPublicProfile(id)
             setUser(user)
+            if(user && user.building_role){
+                setBuildingRole(user.building_role)
+                setOldBuildingRole(user.building_role)
+            }
         }
 
         getMyProfileHandler(id)
         
     }, [id])
+
+    const [updatingBuildingRole, setUpdatingBuildingRole] = useState(false)
+
+    const [error, setError] = useState('')
+
+    async function submitRoleUpdate(e){
+        e.preventDefault()
+
+        setUpdatingBuildingRole(false)
+
+        if(buildingRole == "owner"){
+            setError("You can't make him an owner")
+            return
+        }
+        
+        const { message, success } = await updateRole(buildingRole)
+
+        if(!success){
+            setError(message)
+
+            setBuildingRole(oldBuildingRole)
+        }
+        else{
+            setOldBuildingRole(buildingRole)
+        }
+    }
 
     return (
 
@@ -49,7 +86,7 @@ export default function Profile() {
 
         <div className="center">
             
-            <form className="form">
+            <form className="form" onSubmit={submitRoleUpdate}>
                 <h1 className='formName'>Profile</h1>
 
             <label className="align">
@@ -107,8 +144,33 @@ export default function Profile() {
                 />
             </label>
 
+            { user.building_id && sessionUser && sessionUser.building_id && sessionUser.building_id == user.building_id && sessionUser.id != user.id && sessionUser.building_role == "owner" &&
+                <label className="align">
+                Building Role
+                <input 
+                    disabled={!updatingBuildingRole}
+                    className="input"
+                    type="text"
+                    name="building_role"
+                    value={buildingRole} 
+                    onChange={e => {
+                        setBuildingRole(e.target.value)
+                        setError('')
+                    }}
+                />
+                
+                <div className="buttons">
+                    { updatingBuildingRole && <button type="submit" className="input">Submit</button> }
+                    { !updatingBuildingRole && <button type="button" className="input" onClick={() => { setUpdatingBuildingRole(true) }}>Update</button> }
+                    { updatingBuildingRole && <button type="button" className="input" onClick={() => { setBuildingRole(oldBuildingRole), setUpdatingBuildingRole(false) }}>Cancel</button> }
+                </div>
+            </label>
+            }
+
+
             { user.building_id && <button type="button" className="submit-button" onClick={() => { navigate(`/building/${user.building_id}`) }}>Building</button> }
 
+            {error && <div>{error}</div>}
         </form>
         </div>
 

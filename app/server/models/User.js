@@ -12,8 +12,7 @@ const userSchema = new mongoose.Schema({
     min: 0
   },
   building_role: {
-    type: String,
-    default: "none"
+    type: String
   },
   image: {
     type: String,
