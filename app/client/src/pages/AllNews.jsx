@@ -66,7 +66,7 @@ export default function AllNews() {
         <HeaderPage page={"news"} />
         <main>
             <section className="center">
-                <h1>Latest News</h1>
+                <h1 className="title">Latest News</h1>
 
                 <div className="search-bar">
                     <input
