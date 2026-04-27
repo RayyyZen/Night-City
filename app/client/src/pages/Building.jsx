@@ -54,9 +54,11 @@ export default function Building() {
         { id && building &&
             <div className="center">
                 <h1 className="title"> {building.name} </h1>
-                <div> {building.description} </div>
-                <div> {building.address} </div>
-                <div> {building.area} </div>
+                <div className="description">
+                <div> Description : {building.description} </div>
+                <div> Address : {building.address} </div>
+                <div> Area : {building.area} </div>
+                </div>
 
                 <button className="submit-button" onClick={joinHandler}>Join</button>
                 {error && <div>{error}</div>}
