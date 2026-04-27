@@ -30,7 +30,7 @@ export default function HeaderPage({ page }){
 
     return (
         <header className="header">
-            <Link to="/home" className="logo">Night-Tower</Link>
+            <Link to="/home" className="logo">Night-City</Link>
 
             <nav className="nav">
                 { page != "home" && <Link className ="link" to="/home">Home</Link> }

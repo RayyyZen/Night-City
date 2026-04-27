@@ -53,40 +53,7 @@ export default function Home() {
 
       <main>
         <section className="center">
-          <h1 className="title">Welcome on Night-Tower</h1>
-          <p>
-            An intelligent platform to centralize information,
-            services, and connected objects.
-          </p>
-          <button className="submit-button"> Discover</button>
-        </section>
-
-        <section className="center">
-          <h2>Latest news</h2>
-
-          <div className="search-bar">
-            <input
-              className="input"
-              type="text"
-              placeholder="Search news..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-          </div>
-
-          <div className="card-container">
-            {filteredNews.length > 0 ? (
-              filteredNews.map((item) => (
-                <article className="card" key={item.id}>
-                  <h3>{highlight(item.title)}</h3>
-                  <p className="date">{item.date}</p>
-                  <p>{highlight(item.content)}</p>
-                </article>
-              ))
-            ) : (
-              <p className="no-result">No results found.</p>
-            )}
-          </div>
+          <h1 className="title">Welcome on Night-City</h1>
         </section>
       </main>
     </div>

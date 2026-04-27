@@ -8,7 +8,7 @@ export default function FooterPage(){
                 <ul className="list-inline">
                     <Link className= "link" to="/about">About</Link>
                 </ul>
-                <p className="copyright">Night-Tower © 2026</p>
+                <p className="copyright">Night-City © 2026</p>
         </footer>
     )
 }

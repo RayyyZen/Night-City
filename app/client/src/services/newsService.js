@@ -79,5 +79,5 @@ export async function getAllNews(){
         }
     }
 
-    return news
+    return { news }
 }
