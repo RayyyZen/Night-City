@@ -219,8 +219,10 @@ export default function Device() {
                 />
             </label>
 
-            { device.status == "in_use" && <button onClick={() => navigate(`/profile/${device.user_id}`)}>User</button> }
-            <button className="submit-button" type="button" onClick={() => navigate(`/building/${device.building_id}`)}>Building</button>
+            <div className="buttons">
+                { device.status == "in_use" && <button className="submit-button" onClick={() => navigate(`/profile/${device.user_id}`)}>User</button> }
+                <button className="submit-button" type="button" onClick={() => navigate(`/building/${device.building_id}`)}>Building</button>
+            </div>
 
             {error && <div className="error">!!! {error}</div>}
         </form>

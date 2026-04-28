@@ -208,7 +208,7 @@ export default function MyBuilding() {
     }
 
     const listDevices = devices?.map(device => 
-        <div className="card" key={device.id} onClick={() => navigate(`/device/${device.id}`) }>
+        <div className="device" key={device.id} onClick={() => navigate(`/device/${device.id}`) }>
             <article> {device.name} [{device.status}] </article>
             <div className="buttons">
             {device.status == "idle" && <button className="submit-button" type="button" onClick={(e) => { e.stopPropagation(), deviceUseHandler(e,device.id) } }>Use</button> }
