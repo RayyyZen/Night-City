@@ -1,3 +1,5 @@
+import { handle } from './handleService.js'
+
 export async function submitCode(codee){
 
     const res = await fetch('http://localhost:3000/users/verify-code', {
@@ -11,26 +13,7 @@ export async function submitCode(codee){
         })
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        success: success,
-        message: message
-    }
+    return await handle(res)
 }
 
 export async function resendCode(){
@@ -43,19 +26,7 @@ export async function resendCode(){
         credentials: 'include'
     })
 
-    let message = null
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch (err) {
-        message = "Server error"
-        console.log(err)
-    }
-
-    return {
-        message: message
-    }
+    return await handle(res)
 }
 
 export async function session(){
@@ -98,26 +69,7 @@ export async function joinBuilding(id, password){
         })
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        success: success,
-        message: message
-    }
+    return await handle(res)
 }
 
 export async function logOut(){
@@ -130,15 +82,7 @@ export async function logOut(){
         credentials: 'include'
     })
 
-    let success = false
-
-    if(res.ok){
-        success = true
-    }
-
-    return {
-        success: success
-    }
+    return await handle(res)
 }
 
 export async function getMyProfile(){
@@ -204,26 +148,7 @@ export async function updateProfile(data){
         })
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        success: success,
-        message: message
-    }
+    return await handle(res)
 }
 
 export async function kick(id){
@@ -236,26 +161,7 @@ export async function kick(id){
         credentials: 'include'
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        success: success,
-        message: message
-    }
+    return await handle(res)
 }
 
 export async function leave(){
@@ -268,26 +174,7 @@ export async function leave(){
         credentials: 'include'
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        success: success,
-        message: message
-    }
+    return await handle(res)
 }
 
 export async function updateRole(id, building_role){
@@ -303,26 +190,7 @@ export async function updateRole(id, building_role){
         })
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        success: success,
-        message: message
-    }
+    return await handle(res)
 }
 
 export async function getAllUsers(){
@@ -359,24 +227,5 @@ export async function deleteUser(id){
         credentials: 'include'
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        success: success,
-        message: message
-    }
+    return await handle(res)
 }

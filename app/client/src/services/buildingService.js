@@ -1,3 +1,5 @@
+import { handle } from './handleService.js'
+
 async function getResult(res){
     let result = null
 
@@ -76,26 +78,7 @@ export async function createBuilding(name, description, address, area, password)
         })
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        message: message,
-        success: success
-    }
+    return await handle(res)
 }
 
 export async function updateBuilding(data){
@@ -112,24 +95,5 @@ export async function updateBuilding(data){
         })
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        success: success,
-        message: message
-    }
+    return await handle(res)
 }

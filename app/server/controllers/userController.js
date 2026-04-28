@@ -124,6 +124,9 @@ const updateSession = async (req, res) => {
         try{
             const user = await userService.getUserById(Number(req.session.user.id))
             if(user){
+                req.session.user.level = user.level
+                req.session.user.role = user.role
+                
                 if(user.building_id){
                     req.session.user.building_id = user.building_id
                     req.session.user.building_role = user.building_role

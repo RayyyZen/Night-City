@@ -106,8 +106,10 @@ export default function News() {
                 />
             </label>
 
+            <div className="buttons addGap">
             <button type="button" className="submit-button" onClick={() => navigate(`/profile/${news.author_id}`)}>Author</button>
             <button type="button" className="submit-button" onClick={() => navigate(`/building/${news.building_id}`)}>Building</button>
+            </div>
         </form>
         </div>
         }

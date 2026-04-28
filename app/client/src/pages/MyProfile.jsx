@@ -30,11 +30,9 @@ export default function MyProfile() {
 
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
-    const [image, setImage] = useState('')
 
     const [oldFirstName, setOldFirstName] = useState('')
     const [oldLastName, setOldLastName] = useState('')
-    const [oldImage, setOldImage] = useState('')
 
     const [fieldType, setFieldType] = useState('password')
 
@@ -66,11 +64,9 @@ export default function MyProfile() {
             if(user){
                 setFirstName(user.firstName)
                 setLastName(user.lastName)
-                setImage(user.image)
 
                 setOldFirstName(user.firstName)
                 setOldLastName(user.lastName)
-                setOldImage(user.image)
             }
             
         }
@@ -103,12 +99,10 @@ export default function MyProfile() {
 
             setFirstName(oldFirstName)
             setLastName(oldLastName)
-            setImage(oldImage)
         }
         else{
             setOldFirstName(firstName)
             setOldLastName(lastName)
-            setOldImage(image)
         }
         setPassword("123456789")
     }
@@ -144,8 +138,6 @@ export default function MyProfile() {
             return
         }
  
-        setImage(uploadData.path)
-        setOldImage(uploadData.path)
         setUser(prev => ({ ...prev, image: uploadData.path }))
         setUpdatingImage(false)
         setImageFile(null)
@@ -178,13 +170,15 @@ export default function MyProfile() {
                         : <div className="image-placeholder"></div>
                 }
  
+                { updatingImage && <label className="custom-file-button">Choose file<input type="file" accept="image/*" className="hidden-input" onChange={e => { const f = e.target.files[0]; if(!f) return; setImageFile(f); setImagePreview(URL.createObjectURL(f)); setImageError('') }} /></label> }
                 <div className="buttons">
                     { !updatingImage && <button type="button" className="input" onClick={() => { if(!updatingFirstName && !updatingLastName && !updatingPassword) setUpdatingImage(true) }}>Update</button> }
-                    { updatingImage && <label className="custom-file-button">Choose file<input type="file" accept="image/*" className="hidden-input" onChange={e => { const f = e.target.files[0]; if(!f) return; setImageFile(f); setImagePreview(URL.createObjectURL(f)); setImageError('') }} /></label> }
                     { updatingImage && imageFile && <button type="button" className="input" onClick={submitImageUpdate}>Submit</button> }
                     { updatingImage && <button type="button" className="input" onClick={() => { setUpdatingImage(false); setImageFile(null); setImagePreview(null); setImageError('') }}>Cancel</button> }
                 </div>
                 { imageError && <div>{imageError}</div> }
+
+
             <label className="align">
                 First Name
                 <input 
@@ -201,7 +195,7 @@ export default function MyProfile() {
                 
                 <div className="buttons">
                     { updatingFirstName && <button type="submit" className="input">Submit</button> }
-                    { !updatingFirstName && <button type="button" className="input" onClick={() => { if(!updatingLastName && !updatingPassword) setUpdatingFirstName(true) }}>Update</button> }
+                    { !updatingFirstName && <button type="button" className="input" onClick={() => { if(!updatingImage && !updatingLastName && !updatingPassword) setUpdatingFirstName(true) }}>Update</button> }
                     { updatingFirstName && <button type="button" className="input" onClick={() => { setFirstName(oldFirstName), setUpdatingFirstName(false) }}>Cancel</button> }
                 </div>
             </label>
@@ -222,7 +216,7 @@ export default function MyProfile() {
 
                 <div className="buttons">
                     { updatingLastName && <button type="submit" className="input">Submit</button> }
-                    { !updatingLastName && <button type="button" className="input" onClick={() => { if(!updatingFirstName && !updatingPassword) setUpdatingLastName(true) }}>Update</button> }
+                    { !updatingLastName && <button type="button" className="input" onClick={() => { if(!updatingImage && !updatingFirstName && !updatingPassword) setUpdatingLastName(true) }}>Update</button> }
                     { updatingLastName && <button type="button" className="input" onClick={() => { setLastName(oldLastName), setUpdatingLastName(false) }}>Cancel</button> }
                 </div>
             </label>
@@ -265,7 +259,7 @@ export default function MyProfile() {
 
                 <div className="buttons">
                     { updatingPassword && <button type="submit" className="input">Submit</button> }
-                    { !updatingPassword && <button type="button" className="input" onClick={() => { if(!updatingFirstName && !updatingLastName) setUpdatingPassword(true) }}>Update</button> }
+                    { !updatingPassword && <button type="button" className="input" onClick={() => { if(!updatingImage && !updatingFirstName && !updatingLastName) setUpdatingPassword(true) }}>Update</button> }
                     { updatingPassword && <button type="button" className="input" onClick={() => { setPassword("123456789"), setUpdatingPassword(false) }}>Cancel</button> }
                 </div>
 
@@ -309,9 +303,22 @@ export default function MyProfile() {
                 />
             </label>
 
-            { user.building_id && <button type="button" className="submit-button" onClick={() => { navigate('/mybuilding') }}>Building</button> }
+            { user.building_role &&
+                <label className="align">
+                    Building role
+                    <input 
+                        disabled
+                        className="input"
+                        type="text"
+                        name="building_role"
+                        value={user.building_role} 
+                    />
+                </label>
+            }
 
-            {error && <div>{error}</div>}
+            { user.building_id && <button type="button" className="submit-button" onClick={() => { navigate('/mybuilding') }}>My Building</button> }
+
+            {error && <div className="error">{error}</div>}
         </form>
         </div>
 

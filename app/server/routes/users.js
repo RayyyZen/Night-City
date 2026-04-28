@@ -40,7 +40,7 @@ router.put('/update', limiter, userMiddlewares.auth, userController.updateProfil
 router.put('/update/:id', limiter, userMiddlewares.auth, userMiddlewares.isAdmin, userController.updateUser)
 
 router.post('/join-building/:id', limiter, userValidators.joinCodeValidation, validate, userMiddlewares.auth, userController.joinBuilding)
-router.post('/update-building-role/:id', limiter, userValidators.buildingRoleValidation, validate, userMiddlewares.auth, userController.updateBuildingRole)
+router.put('/update-building-role/:id', limiter, userValidators.buildingRoleValidation, validate, userMiddlewares.auth, userController.updateBuildingRole)
 router.post('/kick/:id', limiter, userMiddlewares.auth, userController.kickFromBuilding)
 router.post('/leave', limiter, userMiddlewares.auth, userController.leaveBuilding)
 
@@ -53,7 +53,7 @@ router.delete('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, userControl
 
 
 
-router.post('/upload-image', userMiddlewares.auth, upload.single('image'), (req, res) => {
+router.post('/upload-image', upload.single('image'), (req, res) => {
     if (!req.file) return res.status(400).json({ message: 'Aucun fichier reçu' })
     res.json({ path: `uploads/${req.file.filename}` })
 })

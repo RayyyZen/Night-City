@@ -39,3 +39,17 @@ exports.hasBuilding = (req, res, next) => {
     }
     next()
 }
+
+exports.cantPublishNews = (req, res, next) => {
+    if((!req.session.user.level || req.session.user.level == "beginner") && (!req.session.user.building_role || req.session.user.building_role !== "owner")){
+        return res.status(403).json({ message: "You can not publish news" })
+    }
+    next()
+}
+
+exports.cantCreateDevice = (req, res, next) => {
+    if((!req.session.user.level || req.session.user.level == "beginner" || req.session.user.level == "intermediate") && (!req.session.user.building_role || req.session.user.building_role !== "owner")){
+        return res.status(403).json({ message: "You can not create a device" })
+    }
+    next()
+}

@@ -1,3 +1,5 @@
+import { handle } from './handleService.js'
+
 export async function createNews(title, content){
 
     const res = await fetch('http://localhost:3000/news/', {
@@ -12,26 +14,7 @@ export async function createNews(title, content){
         })
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        message: message,
-        success: success
-    }
+    return await handle(res)
 }
 
 export async function getNews(id){

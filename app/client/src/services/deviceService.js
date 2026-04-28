@@ -1,3 +1,5 @@
+import { handle } from './handleService.js'
+
 export async function createDevice(name, description, energy){
 
     const res = await fetch('http://localhost:3000/devices/', {
@@ -13,26 +15,7 @@ export async function createDevice(name, description, energy){
         })
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        message: message,
-        success: success
-    }
+    return await handle(res)
 }
 
 export async function getDevice(id){
@@ -75,26 +58,7 @@ export async function updateDevice(id, data){
         })
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        success: success,
-        message: message
-    }
+    return await handle(res)
 }
 
 async function deviceAction(action, id){
@@ -107,26 +71,7 @@ async function deviceAction(action, id){
         credentials: 'include'
     })
 
-    let message = null
-    let success = true
-
-    if(!res.ok){
-        success = false
-    }
-
-    try{
-        const data = await res.json()
-        message = data.message
-    } catch(err) {
-        message = "Server error"
-        success = false
-        console.log(err)
-    }
-
-    return {
-        success: success,
-        message: message
-    }
+    return await handle(res)
 }
 
 export async function deviceUse(id){

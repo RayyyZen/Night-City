@@ -54,38 +54,38 @@ export default function Register() {
     const validate = () => {
         const newErrors = {}
         if (!form.email) {
-            newErrors.email = 'Email manquant'
+            newErrors.email = 'Email missing'
         } else if (!/^\S+@\S+\.\S+$/.test(form.email) || !(!/[A-Z]/.test(form.email))) {
-            newErrors.email = 'Format invalide (ex : ray123@gmail.com)'
+            newErrors.email = 'Invalid format (ex : ray123@gmail.com)'
         }
         if (!form.nickName) {
-            newErrors.nickName = 'Pseudo manquant'
+            newErrors.nickName = 'Nick Name missing'
         } else if (form.nickName.length < 3) {
-            newErrors.nickName = 'Pseudo trop court (min. 3 caractères)'
+            newErrors.nickName = 'Nick Name too short (min. 3 caracters)'
         } else if (pseudoStatus === 'taken') {
-            newErrors.nickName = 'Ce pseudo est déjà pris'
+            newErrors.nickName = 'This nick name is already taken'
         }
         if (!form.password) {
-            newErrors.password = 'Mot de passe manquant'
+            newErrors.password = 'Password missing'
         } else if (form.password.length < 5) {
-            newErrors.password = 'Minimum 5 caractères'
+            newErrors.password = 'Minimum 5 caracters'
         }
         if (!form.confirmPassword) {
-            newErrors.confirmPassword = 'Veuillez confirmez votre mot de passe'
+            newErrors.confirmPassword = 'Confirm your password'
         } else if (form.password !== form.confirmPassword) {
-            newErrors.confirmPassword = 'Les mots de passe ne correspondent pas'
+            newErrors.confirmPassword = 'The passwords are not the same'
         }
         if (!form.firstName) {
-            newErrors.firstName = 'Prénom manquant'
+            newErrors.firstName = 'First Name missing'
         }
         if (!form.lastName) {
-            newErrors.lastName = 'Nom manquant'
+            newErrors.lastName = 'Last Name missing'
         }
         if (!form.gender) {
-            newErrors.gender = 'Genre manquant'
+            newErrors.gender = 'Gender missing'
         }
         if (!form.birthdate) {
-            newErrors.birthdate = 'Date de naissance manquante'
+            newErrors.birthdate = 'Birth date missing'
         } else {
             const date = new Date(form.birthdate)
             const year = date.getFullYear()
@@ -93,15 +93,15 @@ export default function Register() {
             const day = date.getDay()
             const currentYear = new Date().getFullYear()
             if (year.toString().length > 4) {
-                newErrors.birthdate = 'Année invalide (max. 4 chiffres)'
+                newErrors.birthdate = 'Invalid year (max. 4 numbers)'
             } else if (year < 1900) {
-                newErrors.birthdate = 'Année invalide (min. 1900)'
+                newErrors.birthdate = 'Invalid year (min. 1900)'
             } else if (year > currentYear) {
-                newErrors.birthdate = `L'année de ne peut pas dépasser ${currentYear}`
+                newErrors.birthdate = `The year can not exceed ${currentYear}`
             } else if (month < 1 || month > 12) {
-                newErrors.birthdate = 'Le mois doit être compris entre 1 et 12'
+                newErrors.birthdate = 'The mouth must be between 1 and 12'
             } else if (day < 1) {
-                newErrors.birthdate = 'Le jour est invalide'
+                newErrors.birthdate = 'Invalid day'
             } else {
                     const daysInMonth = {
                         1: 31, 2: null, 3: 31, 4: 30,
@@ -120,10 +120,10 @@ export default function Register() {
                     if (day > maxDay) {
                         if (month === 2) {
                             newErrors.birthdate = isLeapYear
-                                ? 'Février a au maximum 29 jours (année bissextile)'
-                                : 'Février a au maximum 28 jours'
+                                ? 'February has a maximum of 29 days'
+                                : 'February has a maximum of 28 days'
                         } else {
-                            newErrors.birthdate = `Ce mois a au maximum ${maxDay} jours`
+                            newErrors.birthdate = `This mouth has a maximum of ${maxDay} days`
                         }
                     } else {
                         let age = today.getFullYear() - year
@@ -135,7 +135,7 @@ export default function Register() {
                         }
 
                         if (age < 12) {
-                            newErrors.birthdate = 'Il faut avoir au moins 12 ans pour créer un compte'
+                            newErrors.birthdate = 'You must have atleast 12 years old to create an account'
                         }
                     }
             }
@@ -177,7 +177,7 @@ export default function Register() {
         if (!file) return
 
         if (!file.type.startsWith('image/')) {
-            setErrors(prev => ({ ...prev, image: 'Le fichier doit être une image.' }))
+            setErrors(prev => ({ ...prev, image: 'The file must be an image' }))
             return
         }
         const formData = new FormData()
@@ -201,7 +201,7 @@ export default function Register() {
             setErrors(prev => ({ ...prev, image: '' }))
 
         } catch {
-            setErrors(prev => ({ ...prev, image: "Erreur lors de l'upload." }))
+            setErrors(prev => ({ ...prev, image: "Error while uploading" }))
         }
     }
 
@@ -250,7 +250,7 @@ export default function Register() {
             }
             navigate('/verify-code')
         } catch {
-            setServerError('Impossible de contacter le serveur')
+            setServerError('Servor error')
         } finally {
             setLoading(false)
         }
@@ -261,9 +261,9 @@ export default function Register() {
         <HeaderPage page={"register"}/>
         <div className="center">
             <form className="form" onSubmit={handleSubmit}>
-                <h1 className="formName">Créer un compte</h1>
+                <h1 className="formName">Register</h1>
                      {/* Photo de profil */}
-                    <label className="align">Photo de profil
+                    <label className="align">Profile picture
                         {imagePreview ? (
                             <img
                                 src={imagePreview}
@@ -285,8 +285,8 @@ export default function Register() {
                                 className="hidden-input"
                             />
                             
-                            <label htmlFor="image" className="custom-file-button">
-                                SÉLECTIONNER UNE IMAGE
+                            <label htmlFor="image" className="input custom-file-button">
+                                Select
                             </label>
                         </div>
                         {errors.image && <span className="register-error">{errors.image}</span>}
@@ -308,7 +308,7 @@ export default function Register() {
  
                         </label>
                     {/* Prénom */}
-                    <label className="align">Prénom
+                    <label className="align">First Name
                         <input
                             id="firstName"
                             type="text"
@@ -321,7 +321,7 @@ export default function Register() {
                     </label>
  
                     {/* Nom */}
-                    <label className="align">Nom
+                    <label className="align">Last Name
                         <input
                             id="lastName"
                             type="text"
@@ -334,7 +334,7 @@ export default function Register() {
                     </label>
  
                     {/* Pseudo (nickName) */}
-                    <label className="align">Pseudo
+                    <label className="align">Nick Name
                             {pseudoStatus === 'checking'  && <span className="register-badge register-badge--checking">Vérification…</span>}
                             {pseudoStatus === 'available' && <span className="register-badge register-badge--available">✓</span>}
                             {pseudoStatus === 'taken'     && <span className="register-badge register-badge--taken">✗ Déjà pris</span>}
@@ -353,7 +353,7 @@ export default function Register() {
                     </label>
  
                     {/* Genre */}
-                    <label className="align">Genre
+                    <label className="align">Gender
                         <select
                             id="gender"
                             name="gender"
@@ -369,7 +369,7 @@ export default function Register() {
                     </label>
  
                     {/* Date de naissance */}
-                    <label className="align">Date de naissance
+                    <label className="align">Birth date
                         <input
                             id="birthdate"
                             type="date"
@@ -388,7 +388,7 @@ export default function Register() {
                     </label>
  
                     {/* Mot de passe */}
-                    <label className="align">Mot de passe
+                    <label className="align">Password
                         <input
                             id="password"
                             type="password"
@@ -401,7 +401,7 @@ export default function Register() {
                     </label>
  
                     {/* Confirmation mot de passe */}
-                    <label className="align">Confirmer le mot de passe
+                    <label className="align">Confirm password
                         <input
                             id="confirmPassword"
                             type="password"
@@ -427,9 +427,9 @@ export default function Register() {
                     >
                         {loading ? 'Inscription en cours...' : "S'inscrire"}
                     </button>
-                    <p style={{ fontFamily: 'Orbitron', fontSize: '0.85rem' }}>
-                        Déjà un compte ?{' '}
-                        <Link to="/login" style={{ color: '#FFD700' }}>Sign-in</Link>
+                    <p className="linkSign">
+                        You have an account ?{' '}
+                        <Link to="/login" className="yellow">Sign-in</Link>
                     </p>
  
             </form>

@@ -49,7 +49,8 @@ export default function Admin() {
     const listUsers = filteredUsers.map((user) => (
         <div className="admin-user-card" key={user.id}>
             <article className="user-info" onClick={() => navigate(`/profile/${user.id}`)}>
-                {highlight(user.nickName)} [{user.role}]
+                <span>{highlight(user.nickName)}</span>
+                <span>[{user.role}]</span>
             </article>
             <button className="kick-btn" type="button" onClick={(e) => deleteHandler(e, user.id)}>Delete</button>
         </div>
@@ -76,7 +77,7 @@ export default function Admin() {
                     <button className={roleFilter === 'admin' ? 'submit-button' : 'link'} onClick={() => setRoleFilter('admin')}>Admin</button>
                 </div>
 
-                <div className="card-container">
+                <div className="admin-container">
                     {filteredUsers.length > 0 ? (
                         listUsers
                     ) : (

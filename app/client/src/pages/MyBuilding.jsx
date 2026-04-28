@@ -118,15 +118,13 @@ export default function MyBuilding() {
         }
     }
 
-    const listUsers = users?.map(u => 
-    <div key={u.id} onClick={() => navigate(`/profile/${u.id}`)}>
+    const listUsers = users?.map(u =>         
         
-        
-        <article className="admin-user-card"> 
+        <article key={u.id} onClick={() => { if(user.id == u.id){ navigate('/myprofile') } else{ navigate(`/profile/${u.id}`) } }} className="admin-user-card alignHorizontal"> 
             
             <div className="user-info">
                 <span className="name">{u.nickName}</span>
-                <span className="role">{u.building_role}</span> 
+                <span className="role">[{u.building_role}]</span> 
             </div>
 
             { user.building_role == "owner" && user.id != u.id &&
@@ -156,8 +154,6 @@ export default function MyBuilding() {
             }
 
         </article>
-
-    </div>
 )
 
     async function deviceUseHandler(e, id){
@@ -212,13 +208,13 @@ export default function MyBuilding() {
     }
 
     const listDevices = devices?.map(device => 
-        <div className="card" key={device.id}>
-            <article onClick={() => navigate(`/device/${device.id}`) }> {device.name} [{device.status}] </article>
+        <div className="card" key={device.id} onClick={() => navigate(`/device/${device.id}`) }>
+            <article> {device.name} [{device.status}] </article>
             <div className="buttons">
-            {device.status == "idle" && <button className="submit-button" type="button" onClick={(e) => deviceUseHandler(e,device.id) }>Use</button> }
-            {device.status == "in_use" && (device.user_id == user.id || user.building_role == "owner") && <button className="submit-button" type="button" onClick={(e) => deviceIdleHandler(e,device.id) }>Can</button> }
-            {device.status == "error" && user.building_role == "owner"  && <button className="submit-button" type="button" onClick={(e) => deviceIdleHandler(e,device.id) }>Act</button> }
-            {device.status != "error" && user.building_role == "owner" && <button className="submit-button" type="button" onClick={(e) => deviceErrorHandler(e,device.id) }>Err</button> }
+            {device.status == "idle" && <button className="submit-button" type="button" onClick={(e) => { e.stopPropagation(), deviceUseHandler(e,device.id) } }>Use</button> }
+            {device.status == "in_use" && (device.user_id == user.id || user.building_role == "owner") && <button className="submit-button" type="button" onClick={(e) => { e.stopPropagation(), deviceIdleHandler(e,device.id) } }>Can</button> }
+            {device.status == "error" && user.building_role == "owner"  && <button className="submit-button" type="button" onClick={(e) => { e.stopPropagation(), deviceIdleHandler(e,device.id) } }>Act</button> }
+            {device.status != "error" && user.building_role == "owner" && <button className="submit-button" type="button" onClick={(e) => { e.stopPropagation(), deviceErrorHandler(e,device.id) } }>Err</button> }
             </div>
         </div>
     )
@@ -355,14 +351,19 @@ export default function MyBuilding() {
 
                     <div className="center">
                         <div className="title">Users</div>
-                        {listUsers}
+                        <div className="user-container">
+                            {listUsers}
+                        </div>
                     </div>
 
                     <div className="center">
                         <div className="title">Devices</div>
                         <div className="card-container">{listDevices}</div> 
-                        { user && user.building_role && user.building_role == "owner" && <button className="submit-button" onClick={() => navigate('/create-device')}>Create new device</button> }
-                        <button className="submit-button" onClick={() => navigate('/publish-news')}>Publish news</button>
+                    </div>
+
+                    <div className="buttons">
+                        { user && user.building_role && (user.building_role == "owner" || user.level == "expert") && <button type="button" className="submit-button" onClick={() => navigate('/create-device')}>Create new device</button> }
+                        { user && user.building_role && (user.building_role == "owner" || user.level != "beginner") && <button type="button" className="submit-button" onClick={() => navigate('/publish-news')}>Publish news</button> }
                     </div>
 
                     {error && <div>{error}</div>}

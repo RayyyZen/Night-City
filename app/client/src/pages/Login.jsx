@@ -4,6 +4,7 @@ import HeaderPage from '../components/HeaderPage.jsx';
 import { accessPages } from '../services/accessPages';
 import { useEffect } from "react";
 import FooterPage from '../components/FooterPage.jsx';
+import { Link } from 'react-router-dom'
 
 export default function Login() {
 
@@ -73,6 +74,7 @@ export default function Login() {
             <label className="align">
                 Mail
                 <input 
+                    required
                     className="input"
                     type="email"
                     name="email"
@@ -87,6 +89,7 @@ export default function Login() {
             <label className="align">
                 Password
                 <input 
+                    required
                     className="input"
                     type={fieldType}
                     name="password"
@@ -103,11 +106,17 @@ export default function Login() {
 
             </label>
 
+            {error && <div className="error">!!! {error}</div>}
+
             <button className="submit-button" type="submit">
                 Submit
             </button>
 
-            {error && <div>{error}</div>}
+            <p className="linkSign">
+                No account ?{' '}
+                <Link to="/register" className="yellow">Sign-up</Link>
+            </p>
+
         </form>
         </div>
 

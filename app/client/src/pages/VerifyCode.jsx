@@ -65,6 +65,7 @@ export default function VerifyCode() {
                     value={code}
                     onChange = {e => {
                         setCode(e.target.value)
+                        setError('')
                     }}
                 />
             </label>
@@ -73,11 +74,11 @@ export default function VerifyCode() {
                 Resend the code
             </button>
 
+            {error && <div className="error">!!! {error}</div>}
+
             <button className="submit-button" type="submit">
                 Submit
             </button>
-
-            {error && <div>{error}</div>}
         </form>
         </div>
 

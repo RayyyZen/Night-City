@@ -3,21 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import HeaderPage from '../components/HeaderPage.jsx'
 import FooterPage from '../components/FooterPage.jsx'
 import { getAllNews } from '../services/newsService.js'
-import { accessPages } from '../services/accessPages'
 
 export default function AllNews() {
     const navigate = useNavigate()
+
     const [newsList, setNewsList] = useState([])
     const [query, setQuery] = useState('')
     const [sortOrder, setSortOrder] = useState('desc')
-
-    useEffect(() => {
-        async function checkPage() {
-            const { canAccessToPage } = await accessPages("news")
-            if (!canAccessToPage) navigate("/home")
-        }
-        checkPage()
-    }, [navigate])
 
     useEffect(() => {
         async function fetchNews() {
@@ -79,8 +71,8 @@ export default function AllNews() {
                 </div>
 
                 <div className="buttons">
-                    <button className={sortOrder === 'desc' ? 'submit-button' : 'link'} onClick={() => setSortOrder('desc')}>Newest first</button>
-                    <button className={sortOrder === 'asc'  ? 'submit-button' : 'link'} onClick={() => setSortOrder('asc')}>Oldest first</button>
+                    <button className={sortOrder === 'desc' ? 'submit-button-non-clickable' : 'link'} onClick={() => setSortOrder('desc')}>Newest first</button>
+                    <button className={sortOrder === 'asc'  ? 'submit-button-non-clickable' : 'link'} onClick={() => setSortOrder('asc')}>Oldest first</button>
                 </div>
 
                 <div className="card-container">

@@ -138,7 +138,7 @@ export default function Device() {
                     }}
                 />
 
-                {user && user.building_role && user.building_role == "owner" &&
+                {user && ( (user.building_role && user.building_role == "owner") || (user.level == "expert") ) &&
                 <div className="buttons">
                     { updatingName && <button type="submit" className="input">Submit</button> }
                     { !updatingName && <button type="button" className="input" onClick={() => { if(!updatingDescription && !updatingEnergy) setUpdatingName(true) }}>Update</button> }
@@ -163,7 +163,7 @@ export default function Device() {
                     }}
                 ></textarea>
 
-                {user && user.building_role && user.building_role == "owner" &&
+                {user && ( (user.building_role && user.building_role == "owner") || (user.level == "expert") ) &&
                 <div className="buttons">
                     { updatingDescription && <button type="submit" className="input">Submit</button> }
                     { !updatingDescription && <button type="button" className="input" onClick={() => { if(!updatingName && !updatingEnergy) setUpdatingDescription(true) }}>Update</button> }
@@ -175,7 +175,7 @@ export default function Device() {
             <label className="align">
                 Energy
                 <input 
-                    disabled
+                    disabled={!updatingEnergy}
                     required
                     className="input"
                     type="Number"
@@ -186,7 +186,7 @@ export default function Device() {
                     }}
                 />
 
-                {user && user.building_role && user.building_role == "owner" &&
+                {user && ( (user.building_role && user.building_role == "owner") || (user.level == "expert") ) &&
                 <div className="buttons">
                     { updatingEnergy && <button type="submit" className="input">Submit</button> }
                     { !updatingEnergy && <button type="button" className="input" onClick={() => { if(!updatingDescription && !updatingName) setUpdatingEnergy(true) }}>Update</button> }

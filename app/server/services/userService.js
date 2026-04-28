@@ -38,7 +38,7 @@ exports.getUserProfileById = async (id) => {
 }
 
 exports.getUserPublicProfileById = async (id) => {
-    const user = await User.findOne({ id: id }).select('building_id building_role firstName lastName nickName email level image')
+    const user = await User.findOne({ id: id }).select('building_id building_role firstName lastName nickName email level points image')
     return checkUser(user)
 }
 
@@ -133,20 +133,6 @@ exports.loginSuccess = async (user) => {
     user.codeExpiresAt = null
     user.lastTimeOnline = Date.now()
 
-    user.points += 0.25;
-    if(user.points < 1){
-        user.level = "beginner"
-    }
-    else if(user.points < 2){
-        user.level = "intermediate"
-    }
-    else if(user.points < 3){
-        user.level = "advanced"
-    }
-    else{
-        user.level = "expert"
-    }
-
     await user.save()
 }
 
@@ -219,6 +205,8 @@ exports.joinBuilding = async (userId, buildingId, password) => {
     user.building_id = buildingId
     user.building_role = "none"
     user.codeAttempts = 0
+    user.points = 0
+    user.level = "beginner"
 
     return await user.save()
 }

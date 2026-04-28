@@ -28,6 +28,7 @@ export default function HeaderPage({ page }){
         }
     }
 
+    /*
     return (
         <header className="header">
             <Link to="/home" className="logo">Night-City</Link>
@@ -41,6 +42,23 @@ export default function HeaderPage({ page }){
                 { page != "myprofile" && page != "login" && page != "register" && page != "code" && user && <Link className ="link" to="/myprofile">Profile</Link> }
                 { page != "mybuilding" && page != "login" && page != "register" && page != "code" && user && user.building_id && <Link className ="link" to="/mybuilding">My building</Link> }
                 { page != "create-building" && user && !user.building_id && <Link className ="link" to="/create-building">Create building</Link> }
+                { user && <button className ="link" onClick={logOutHandler}>Log-out</button> }
+            </nav>
+        </header>
+    )
+    */
+
+    return (
+        <header className="header">
+            <Link to="/home" className="logo">Night-City</Link>
+
+            <nav className="nav">
+                { page != "login" && page != "register" && page != "code" && !user && <Link className ="link" to="/login">Sign-in</Link> }
+                { page != "login" && page != "register" && page != "code" && !user && <Link className ="link" to="/register">Sign-up</Link> }
+                { page != "myprofile" && user && <Link className ="link" to="/myprofile">Profile</Link> }
+                { page != "mybuilding" && user && user.building_id && <Link className ="link" to="/mybuilding">Building</Link> }
+                { page != "create-building" && user && !user.building_id && <Link className ="link" to="/create-building">Create building</Link> }
+                { page != "admin" && user && user.role == "admin" && <Link className ="link" to="/admin">Admin</Link> }
                 { user && <button className ="link" onClick={logOutHandler}>Log-out</button> }
             </nav>
         </header>

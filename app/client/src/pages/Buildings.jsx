@@ -45,7 +45,6 @@ export default function Buildings() {
     const listBuildings = filteredBuildings.map((building) => (
         <article className="card" key={building.id} onClick={() => navigate(`/building/${building.id}`)} style={{ cursor: 'pointer' }}>
             <h3>{highlight(building.name)}</h3>
-            {building.description && <p>{highlight(building.description)}</p>}
         </article>
     ))
 

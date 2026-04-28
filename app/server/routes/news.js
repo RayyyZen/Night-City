@@ -18,7 +18,7 @@ router.get('/mybuilding-news', userMiddlewares.auth, userMiddlewares.hasBuilding
 router.get('/mynews', userMiddlewares.auth, newsController.getMyNews)
 router.get('/', newsController.getAllNews)
 router.get('/:id', newsController.getNewsById)
-router.post('/', limiter, newsValidators.createNewsValidation, validate, userMiddlewares.auth, newsController.createNews)
+router.post('/', limiter, newsValidators.createNewsValidation, validate, userMiddlewares.auth, userMiddlewares.cantPublishNews, newsController.createNews)
 router.delete('/:id', userMiddlewares.auth, userMiddlewares.isAdmin, newsController.deleteNews)
 
 module.exports = router

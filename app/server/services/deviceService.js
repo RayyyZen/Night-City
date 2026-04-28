@@ -102,6 +102,19 @@ setDevice = async (id, userId, status) => {
     device.status = status
     device.user_id = user.id
 
+    user.points += 0.25;
+    if(user.points < 1){
+        user.level = "beginner"
+    }
+    else if(user.points < 2){
+        user.level = "intermediate"
+    }
+    else{
+        user.level = "expert"
+    }
+
+    await user.save()
+
     return await device.save()
 }
 
