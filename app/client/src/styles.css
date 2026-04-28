@@ -509,3 +509,9 @@ textarea {
 .alignHorizontal {
   justify-content: center;
 }
+
+.input[disabled]{
+  color: #FFD700;
+  background-color: #252A34;
+  border: 2px solid #FFD700;
+}
