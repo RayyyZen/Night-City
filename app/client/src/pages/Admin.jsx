@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import HeaderPage from '../components/HeaderPage.jsx'
 import FooterPage from '../components/FooterPage.jsx'
 import { getAllUsers, deleteUser } from '../services/userService.js'
+import { accessPages } from '../services/accessPages';
 
 export default function Admin() {
     const navigate = useNavigate()
@@ -10,6 +11,24 @@ export default function Admin() {
     const [query, setQuery] = useState('')
     const [roleFilter, setRoleFilter] = useState('all')
     const [error, setError] = useState('')
+
+
+    const [sessionUser, setSessionUser] = useState(null)
+        
+    useEffect(() => {
+        async function checkPage(){
+            const { user, canAccessToPage } = await accessPages("device")
+
+            if (!canAccessToPage) {
+                navigate("/home")
+            }
+
+            setSessionUser(user)
+        }
+
+        checkPage()
+        
+    }, [navigate])
 
     useEffect(() => {
         async function getAllUsersHandler() {
@@ -52,7 +71,7 @@ export default function Admin() {
                 <span>{highlight(user.nickName)}</span>
                 <span>[{user.role}]</span>
             </article>
-            <button className="kick-btn" type="button" onClick={(e) => deleteHandler(e, user.id)}>Delete</button>
+            { sessionUser && sessionUser.id != user.id && <button className="kick-btn" type="button" onClick={(e) => deleteHandler(e, user.id)}>Delete</button> }
         </div>
     ))
 

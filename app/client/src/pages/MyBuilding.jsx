@@ -245,6 +245,14 @@ export default function MyBuilding() {
         setPassword("123456789")
     }
 
+    useEffect(() => {
+        const el = textareaRef.current
+        if (el) {
+            el.style.height = "auto"
+            el.style.height = el.scrollHeight + "px"
+        }
+    }, [building])
+
 
     return (
         <>
