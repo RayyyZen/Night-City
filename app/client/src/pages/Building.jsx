@@ -104,7 +104,7 @@ export default function Building() {
                         ></textarea>
                     </label>
 
-                    {error && <div className="error">{error}</div>}
+                    {error && <div className="error">!!! {error}</div>}
 
                     <button className="submit-button" onClick={joinHandler}>Join</button>
                 </form>

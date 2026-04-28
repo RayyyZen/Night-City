@@ -83,11 +83,12 @@ export default function PublishNews() {
                 ></textarea>
             </label>
 
+            {error && <div className="error">!!! {error}</div>}
+
             <button className="submit-button" type="submit">
                 Submit
             </button>
 
-            {error && <div>{error}</div>}
         </form>
         </div>
 

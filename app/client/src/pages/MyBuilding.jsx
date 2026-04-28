@@ -350,14 +350,14 @@ export default function MyBuilding() {
                     </label>
 
                     <div className="center">
-                        <div className="title">Users</div>
+                        <h1 className='formName'>Users</h1>
                         <div className="user-container">
                             {listUsers}
                         </div>
                     </div>
 
                     <div className="center">
-                        <div className="title">Devices</div>
+                        <h1 className='formName'>Devices</h1>
                         <div className="card-container">{listDevices}</div> 
                     </div>
 
@@ -366,7 +366,7 @@ export default function MyBuilding() {
                         { user && user.building_role && (user.building_role == "owner" || user.level != "beginner") && <button type="button" className="submit-button" onClick={() => navigate('/publish-news')}>Publish news</button> }
                     </div>
 
-                    {error && <div>{error}</div>}
+                    {error && <div className="error">!!! {error}</div>}
                 </form>
 
             </div>

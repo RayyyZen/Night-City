@@ -137,11 +137,12 @@ export default function CreateBuilding() {
 
             { fieldType == "text" && <button type="button" className="input" onClick={() => { setFieldType("password") }}>Hide</button> }
 
+            {error && <div className="error">!!! {error}</div>}
+
             <button className="submit-button" type="submit">
                 Submit
             </button>
 
-            {error && <div>{error}</div>}
         </form>
         </div>
 

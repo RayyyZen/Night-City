@@ -62,7 +62,7 @@ export default function JoinBuilding() {
                 />
             </label>
 
-            {error && <div className="error">{error}</div>}
+            {error && <div className="error">!!! {error}</div>}
 
             <button className="submit-button" type="submit">
                 Submit

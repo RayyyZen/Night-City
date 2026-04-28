@@ -192,7 +192,7 @@ export default function Profile() {
 
             }
 
-            {error && <div className="error">{error}</div>}
+            {error && <div className="error">!!! {error}</div>}
 
             { user.building_id && <button type="button" className="submit-button" onClick={() => { navigate(`/building/${user.building_id}`) }}>Building</button> }
 

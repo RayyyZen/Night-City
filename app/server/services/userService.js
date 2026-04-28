@@ -145,7 +145,7 @@ exports.generateAndSendCode = async (user) => {
         throw new Error("Can't generate a code for a non existing user")
     }
     user.isVerified = false
-    user.verificationCode = "1"
+    user.verificationCode = Math.floor(100000 + Math.random() * 900000).toString()
     user.codeExpiresAt = Date.now() + 3 * 60 * 1000
     user.codeAttempts = 0
     await user.save()

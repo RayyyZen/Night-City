@@ -259,7 +259,7 @@ export default function MyProfile() {
 
                 <div className="buttons">
                     { updatingPassword && <button type="submit" className="input">Submit</button> }
-                    { !updatingPassword && <button type="button" className="input" onClick={() => { if(!updatingImage && !updatingFirstName && !updatingLastName) setUpdatingPassword(true) }}>Update</button> }
+                    { !updatingPassword && <button type="button" className="input" onClick={() => { if(!updatingImage && !updatingFirstName && !updatingLastName) setPassword(''), setUpdatingPassword(true) }}>Update</button> }
                     { updatingPassword && <button type="button" className="input" onClick={() => { setPassword("123456789"), setUpdatingPassword(false) }}>Cancel</button> }
                 </div>
 
@@ -281,27 +281,31 @@ export default function MyProfile() {
                 />
             </label>
 
-            <label className="align">
-                Level
-                <input 
-                    disabled
-                    className="input"
-                    type="text"
-                    name="level"
-                    value={user.level} 
-                />
-            </label>
+            { user.building_id &&
+                <label className="align">
+                    Level
+                    <input 
+                        disabled
+                        className="input"
+                        type="text"
+                        name="level"
+                        value={user.level} 
+                    />
+                </label>
+            }
 
-            <label className="align">
-                Points
-                <input 
-                    disabled
-                    className="input"
-                    type="Number"
-                    name="points"
-                    value={user.points} 
-                />
-            </label>
+            { user.building_id &&
+                <label className="align">
+                    Points
+                    <input 
+                        disabled
+                        className="input"
+                        type="Number"
+                        name="points"
+                        value={user.points} 
+                    />
+                </label>
+            }
 
             { user.building_role &&
                 <label className="align">
@@ -318,7 +322,7 @@ export default function MyProfile() {
 
             { user.building_id && <button type="button" className="submit-button" onClick={() => { navigate('/mybuilding') }}>My Building</button> }
 
-            {error && <div className="error">{error}</div>}
+            {error && <div className="error">!!! {error}</div>}
         </form>
         </div>
 
