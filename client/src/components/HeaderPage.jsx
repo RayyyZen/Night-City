@@ -31,7 +31,7 @@ export default function HeaderPage({ page }){
     /*
     return (
         <header className="header">
-            <Link to="/home" className="logo">Night-City</Link>
+            <Link to="/home" className="logo">Night City</Link>
 
             <nav className="nav">
                 { page != "home" && <Link className ="link" to="/home">Home</Link> }
@@ -50,7 +50,7 @@ export default function HeaderPage({ page }){
 
     return (
         <header className="header">
-            <Link to="/home" className="logo">Night-City</Link>
+            <Link to="/home" className="logo">Night City</Link>
 
             <nav className="nav">
                 { page != "login" && page != "register" && page != "code" && !user && <Link className ="link" to="/login">Sign-in</Link> }
