@@ -1,4 +1,4 @@
-<h1 align="center">🔋 Night-City 🔋</h1>
+<h1 align="center">🔋 Night City 🔋</h1>
  
 ![NightCity](NightCity.png)
  
