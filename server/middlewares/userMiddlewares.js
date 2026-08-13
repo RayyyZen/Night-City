@@ -1,0 +1,55 @@
+exports.auth = (req, res, next) => {
+    if(!req.session.user){
+        return res.status(401).json({ message: "User not logged in" })
+    }
+    next()
+}
+
+exports.isAdmin = (req, res, next) => {
+    if(req.session.user.role !== "admin"){
+        return res.status(403).json({ message: "Not authorized" })
+    }
+    next()
+}
+
+exports.isLogged = (req, res, next) => {
+    if(req.session.user){
+        return res.status(403).json({ message: "User already logged in" })
+    }
+    next()
+}
+
+exports.pendingUser = (req, res, next) => {
+    if(!req.session.pendingUserId){
+        return res.status(404).json({ message: "No pending user" })
+    }
+    next()
+}
+
+exports.isOwner = (req, res, next) => {
+    if(!req.session.user.building_role || req.session.user.building_role !== "owner"){
+        return res.status(403).json({ message: "You are not the owner" })
+    }
+    next()
+}
+
+exports.hasBuilding = (req, res, next) => {
+    if(!req.session.user.building_id){
+        return res.status(403).json({ message: "You do not belong to any building yet" })
+    }
+    next()
+}
+
+exports.cantPublishNews = (req, res, next) => {
+    if((!req.session.user.level || req.session.user.level == "beginner") && (!req.session.user.building_role || req.session.user.building_role !== "owner")){
+        return res.status(403).json({ message: "You can not publish news" })
+    }
+    next()
+}
+
+exports.cantCreateDevice = (req, res, next) => {
+    if((!req.session.user.level || req.session.user.level == "beginner" || req.session.user.level == "intermediate") && (!req.session.user.building_role || req.session.user.building_role !== "owner")){
+        return res.status(403).json({ message: "You can not create a device" })
+    }
+    next()
+}

@@ -1,0 +1,41 @@
+services:
+
+  client:
+    build: ./client
+    container_name: client
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      server:
+        condition: service_healthy
+    restart: unless-stopped
+
+  server:
+    build: ./server
+    container_name: server
+    environment:
+      MONGO: mongodb://db:27017/app
+      SESSION_SECRET: ${SESSION_SECRET:-demo-secret-not-for-production}
+      API_KEY_RESEND: ${API_KEY_RESEND:-}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - uploads:/app/uploads
+
+  db:
+    image: mongo:7
+    container_name: db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+  uploads:

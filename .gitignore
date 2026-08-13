@@ -1,2 +1,26 @@
+# Dependencies
 node_modules
+
+# Build
+dist
+dist-ssr
+
+# Env
 .env
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Uploads (doesn't ignore the defaut profile picture of the admin created when the app is launched)
+server/uploads/*
+!server/uploads/default.png
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.sw?
