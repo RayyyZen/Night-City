@@ -104,8 +104,15 @@ exports.updateUser = async (id, data, isAdmin) => {
 }
 
 exports.deleteUserById = async (id) => {
-    const user = await User.findOneAndDelete({ id: id })
-    return checkUser(user)
+    const user = await User.findOne({ id: id })
+    userNotFound(user)
+
+    if(user.building_id){
+        await exports.kickFromBuilding(user.id)
+    }
+
+    await User.deleteOne({ id: id })
+    return user
 }
 
 exports.login = async (email, password) => {
